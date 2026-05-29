@@ -10,9 +10,9 @@ terraform {
 
   # État Terraform stocké dans GCS.
   # Créer le bucket manuellement avant le premier `terraform init` :
-  #   gsutil mb -l europe-west1 gs://hippocampe-tfstate
+  #   gsutil mb -l europe-west1 gs://demo-tfstate
   backend "gcs" {
-    bucket = "hippocampe-tfstate"
+    bucket = "demo-tfstate"
     prefix = "terraform/state"
   }
 }

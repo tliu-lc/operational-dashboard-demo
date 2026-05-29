@@ -158,7 +158,7 @@ def build_display_df(df: pd.DataFrame, n: int, mode: str) -> pd.DataFrame:
 
 def render_page() -> None:
     st.set_page_config(
-        page_title="Best-sellers & Flops — Hippocampe Monitor",
+        page_title="Best-sellers & Flops — Demo Monitor",
         layout="wide",
     )
     inject_light_theme()

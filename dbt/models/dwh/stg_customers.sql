@@ -35,7 +35,7 @@ WITH unioned AS (
     SAFE_CAST(NAF                    AS STRING)                                     AS naf_code,
     SAFE_CAST(SUBSTR(CAST(FirstInvoicingDate AS STRING), 1, 10) AS DATE)            AS first_invoice_date,
     SAFE_CAST(SUBSTR(CAST(LastInvoicingDate AS STRING), 1, 10) AS DATE)             AS last_invoice_date
-  FROM `{{ env_var('GCP_PROJECT_ID') }}.hippocampe_raw.raw_{{ code_lower }}_customer`
+  FROM `{{ env_var('GCP_PROJECT_ID') }}.demo_raw.raw_{{ code_lower }}_customer`
   WHERE Id IS NOT NULL
 {% if not loop.last %} UNION ALL {% endif %}
 {% endfor %}

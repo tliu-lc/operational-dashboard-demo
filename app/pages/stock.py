@@ -103,7 +103,7 @@ def fmt_stock(val) -> str:
 
 def render_page() -> None:
     st.set_page_config(
-        page_title="Stocks par dépôt — Hippocampe Monitor",
+        page_title="Stocks par dépôt — Demo Monitor",
         layout="wide",
     )
     inject_light_theme()

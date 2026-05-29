@@ -1,5 +1,5 @@
 -- Setup one-shot pour la page /prospection : crée le dataset éditable
--- hippocampe_prospects et la table prospect_status (UPSERT humain via API).
+-- demo_prospects et la table prospect_status (UPSERT humain via API).
 --
 -- Spec : vault/Data/DATA-014.md §4
 -- Règles d'usage :
@@ -15,18 +15,18 @@
 --   bq --project_id=$GCP_PROJECT_ID query --use_legacy_sql=false < ingestion/setup_prospect_status.sql
 -- ou via la console BigQuery (UI > Query editor).
 
--- 1. Dataset éditable (distinct de hippocampe_dtm, qui est rebuild par dbt)
--- Location alignée sur hippocampe_raw / dwh / dtm (europe-west1) — sinon
+-- 1. Dataset éditable (distinct de demo_dtm, qui est rebuild par dbt)
+-- Location alignée sur demo_raw / dwh / dtm (europe-west1) — sinon
 -- l'API planterait sur le JOIN cross-location mart_prospects ↔ prospect_status.
-CREATE SCHEMA IF NOT EXISTS `hippocampe_prospects`
+CREATE SCHEMA IF NOT EXISTS `demo_prospects`
 OPTIONS (
   location = 'europe-west1',
-  description = 'Dataset éditable — statuts prospects saisis manuellement via la page /prospection (Sprint 17). Distinct de hippocampe_dtm pour ne JAMAIS être recréé par dbt run.'
+  description = 'Dataset éditable — statuts prospects saisis manuellement via la page /prospection (Sprint 17). Distinct de demo_dtm pour ne JAMAIS être recréé par dbt run.'
 );
 
 -- 2. Table prospect_status — schéma DATA-014 §4
 -- BigQuery n'a pas de PRIMARY KEY enforced : unicité par SIRET garantie côté API (MERGE).
-CREATE TABLE IF NOT EXISTS `hippocampe_prospects.prospect_status` (
+CREATE TABLE IF NOT EXISTS `demo_prospects.prospect_status` (
   siret           STRING    NOT NULL OPTIONS (description = 'SIRET 14 chiffres — clé logique'),
   statut          STRING    NOT NULL OPTIONS (description = "Énuméré 'a_contacter' | 'contacte' | 'pas_interesse' — contrôle pydantic API"),
   note            STRING             OPTIONS (description = 'Note libre (max 500 caractères — validation API)'),

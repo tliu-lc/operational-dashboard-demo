@@ -27,7 +27,7 @@ WITH unioned AS (
       WHEN REGEXP_CONTAINS(UPPER(CAST(Caption AS STRING)), r'SACS|SAC\b')       THEN 'SAC'
       ELSE 'AUTRE'
     END                                                           AS type_vetement
-  FROM `{{ env_var('GCP_PROJECT_ID') }}.hippocampe_raw.raw_{{ code_lower }}_item`
+  FROM `{{ env_var('GCP_PROJECT_ID') }}.demo_raw.raw_{{ code_lower }}_item`
   WHERE Id IS NOT NULL
 {% if not loop.last %} UNION ALL {% endif %}
 {% endfor %}

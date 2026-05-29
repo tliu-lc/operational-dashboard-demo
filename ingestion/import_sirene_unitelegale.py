@@ -16,7 +16,7 @@ Pipeline :
   4. WRITE_TRUNCATE upload → raw_sirene_unitelegale (~25-40k lignes)
 
 Usage minimal :
-    GCP_PROJECT_ID=hippocampe-xxx BQ_RAW_DATASET=hippocampe_raw \\
+    GCP_PROJECT_ID=demo-xxx BQ_RAW_DATASET=demo_raw \\
         python ingestion/import_sirene_unitelegale.py
 
 Options : identique à import_sirene_naf4771z.py.
@@ -161,7 +161,7 @@ def main() -> None:
                         help="Filtre et écrit le CSV local, sans upload BQ")
     args = parser.parse_args()
 
-    dataset = os.environ.get("BQ_RAW_DATASET", "hippocampe_raw")
+    dataset = os.environ.get("BQ_RAW_DATASET", "demo_raw")
     project = os.environ.get("GCP_PROJECT_ID")
     if not project:
         print("ERREUR : GCP_PROJECT_ID requis (lecture SIREN depuis raw_sirene_etab)",

@@ -115,7 +115,7 @@ def format_delay_label(row: pd.Series) -> str:
 
 def render_page() -> None:
     st.set_page_config(
-        page_title="Réassort client — Hippocampe Monitor",
+        page_title="Réassort client — Demo Monitor",
         layout="centered",
     )
     inject_light_theme()

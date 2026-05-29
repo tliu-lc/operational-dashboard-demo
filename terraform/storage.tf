@@ -1,7 +1,7 @@
 # ── Bucket données brutes (CSV EBP déposés par le script d'ingestion) ──────
 
 resource "google_storage_bucket" "raw_data" {
-  name          = "hippocampe-raw-${var.project_id}"
+  name          = "demo-raw-${var.project_id}"
   location      = var.region
   project       = var.project_id
   force_destroy = false
@@ -20,11 +20,11 @@ resource "google_storage_bucket" "raw_data" {
 
 # ── Bucket état Terraform ──────────────────────────────────────────────────
 # Ce bucket doit exister AVANT le premier `terraform init`.
-# Créer manuellement : gsutil mb -l europe-west1 gs://hippocampe-tfstate
-# On l'importe ensuite : terraform import google_storage_bucket.tfstate hippocampe-tfstate
+# Créer manuellement : gsutil mb -l europe-west1 gs://demo-tfstate
+# On l'importe ensuite : terraform import google_storage_bucket.tfstate demo-tfstate
 
 resource "google_storage_bucket" "tfstate" {
-  name          = "hippocampe-tfstate"
+  name          = "demo-tfstate"
   location      = var.region
   project       = var.project_id
   force_destroy = false

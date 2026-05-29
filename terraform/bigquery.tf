@@ -3,8 +3,8 @@
 # (conteneurs) et leurs paramètres d'accès.
 
 resource "google_bigquery_dataset" "raw" {
-  dataset_id    = "hippocampe_raw"
-  friendly_name = "Hippocampe — RAW (données brutes CSV)"
+  dataset_id    = "demo_raw"
+  friendly_name = "Demo — RAW (données brutes CSV)"
   description   = "Données EBP brutes chargées depuis GCS. Géré par le job d'ingestion."
   location      = var.region
   project       = var.project_id
@@ -13,7 +13,7 @@ resource "google_bigquery_dataset" "raw" {
 
   access {
     role          = "OWNER"
-    user_by_email = google_service_account.hippocampe.email
+    user_by_email = google_service_account.demo.email
   }
   access {
     role          = "OWNER"
@@ -32,8 +32,8 @@ resource "google_bigquery_dataset" "raw" {
 }
 
 resource "google_bigquery_dataset" "dwh" {
-  dataset_id    = "hippocampe_dwh"
-  friendly_name = "Hippocampe — DWH (entrepôt unifié)"
+  dataset_id    = "demo_dwh"
+  friendly_name = "Demo — DWH (entrepôt unifié)"
   description   = "Tables stg_* nettoyées et unifiées 4 boutiques. Géré par dbt."
   location      = var.region
   project       = var.project_id
@@ -42,7 +42,7 @@ resource "google_bigquery_dataset" "dwh" {
 
   access {
     role          = "OWNER"
-    user_by_email = google_service_account.hippocampe.email
+    user_by_email = google_service_account.demo.email
   }
   access {
     role          = "OWNER"
@@ -61,8 +61,8 @@ resource "google_bigquery_dataset" "dwh" {
 }
 
 resource "google_bigquery_dataset" "dtm" {
-  dataset_id    = "hippocampe_dtm"
-  friendly_name = "Hippocampe — DTM (data marts)"
+  dataset_id    = "demo_dtm"
+  friendly_name = "Demo — DTM (data marts)"
   description   = "Tables mart_* agrégées, prêtes pour l'API. Géré par dbt."
   location      = var.region
   project       = var.project_id
@@ -71,7 +71,7 @@ resource "google_bigquery_dataset" "dtm" {
 
   access {
     role          = "OWNER"
-    user_by_email = google_service_account.hippocampe.email
+    user_by_email = google_service_account.demo.email
   }
   access {
     role          = "OWNER"

@@ -1,9 +1,9 @@
 """Endpoints page Prospection — SIRENE NAF 47.71Z non-clients par département.
 
 Modèle DATA-014 :
-  - hippocampe_dtm.mart_prospects                 (flag is_prospect + match_rule)
-  - hippocampe_dtm.mart_prospects_par_departement (agrégat carte)
-  - hippocampe_prospects.prospect_status          (table éditable SIRET PK)
+  - demo_dtm.mart_prospects                 (flag is_prospect + match_rule)
+  - demo_dtm.mart_prospects_par_departement (agrégat carte)
+  - demo_prospects.prospect_status          (table éditable SIRET PK)
 """
 import io
 import logging
@@ -23,8 +23,8 @@ from api.bq import dtm, dwh, get_bq, p, run_query, PROJECT
 
 router = APIRouter()
 
-# Dataset éditable (table prospect_status) — distinct de hippocampe_dtm.
-PROSPECTS_DATASET = os.environ.get("BQ_PROSPECTS_DATASET", "hippocampe_prospects")
+# Dataset éditable (table prospect_status) — distinct de demo_dtm.
+PROSPECTS_DATASET = os.environ.get("BQ_PROSPECTS_DATASET", "demo_prospects")
 
 
 def _prospects(table: str) -> str:
@@ -105,7 +105,7 @@ def _fetch_last_import_date():
     try:
         df = run_query(
             f"""SELECT TIMESTAMP_MILLIS(MAX(last_modified_time)) AS ts
-                FROM `{PROJECT}.hippocampe_raw.__TABLES__`
+                FROM `{PROJECT}.demo_raw.__TABLES__`
                 WHERE table_id = 'raw_sirene_etab'""",
         )
         if df.empty or pd.isna(df["ts"].iloc[0]):

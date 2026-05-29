@@ -1,4 +1,4 @@
-# HIPPOCAMPE-MONITOR
+# DEMO-MONITOR
 
 Dashboard de monitoring opérationnel pour une société de vente grossiste de vêtements (4 boutiques EBP).
 
@@ -14,33 +14,33 @@ Internet
    ▼
 ┌─────────────────────────────┐
 │  Cloud Run — Next.js        │  ← Seul point d'entrée public
-│  hippocampe-frontend        │    Login JWT protège toutes les pages
+│  demo-frontend        │    Login JWT protège toutes les pages
 └──────────────┬──────────────┘
                │ appels internes VPC
                ▼
 ┌─────────────────────────────┐
 │  Cloud Run — FastAPI        │  ← API privée (ingress: internal)
-│  hippocampe-api             │    Lit depuis BigQuery
+│  demo-api             │    Lit depuis BigQuery
 └──────────────┬──────────────┘
                │
                ▼
 ┌─────────────────────────────┐
 │  BigQuery                   │
-│  hippocampe_raw             │  ← CSV EBP chargés par le job ingestion
-│  hippocampe_dwh             │  ← Staging tables (dbt)
-│  hippocampe_dtm             │  ← Marts consommés par l'API (dbt)
+│  demo_raw             │  ← CSV EBP chargés par le job ingestion
+│  demo_dwh             │  ← Staging tables (dbt)
+│  demo_dtm             │  ← Marts consommés par l'API (dbt)
 └──────────────┬──────────────┘
                ▲
 ┌──────────────┴──────────────┐
-│  GCS — hippocampe-raw-prod  │  ← CSV EBP déposés par script externe
+│  GCS — demo-raw-prod  │  ← CSV EBP déposés par script externe
 └─────────────────────────────┘
 ```
 
 **Pipeline de données quotidien** (Cloud Scheduler → Cloud Run Jobs) :
 
 ```
-03:00  Job hippocampe-ingestion  →  GCS CSV → BQ hippocampe_raw
-03:20  Job hippocampe-dbt        →  dbt seed + dbt run → BQ dwh + dtm
+03:00  Job demo-ingestion  →  GCS CSV → BQ demo_raw
+03:20  Job demo-dbt        →  dbt seed + dbt run → BQ dwh + dtm
 ```
 
 **CI/CD** : chaque push sur `main` déclenche Cloud Build qui :
@@ -107,7 +107,7 @@ AUTH_PASSWORD_HASH=...
 ## Structure du projet
 
 ```
-hippocampe-monitor/
+demo-monitor/
 │
 ├── api/                        ← Backend FastAPI
 │   ├── main.py                 ← Point d'entrée + chargement .env
@@ -175,31 +175,31 @@ hippocampe-monitor/
 
 | Service | Visibilité | Rôle |
 |---|---|---|
-| `hippocampe-frontend` | Public | Interface web Next.js |
-| `hippocampe-api` | Interne | API FastAPI |
+| `demo-frontend` | Public | Interface web Next.js |
+| `demo-api` | Interne | API FastAPI |
 
 ### Cloud Run Jobs
 
 | Job | Heure | Rôle |
 |---|---|---|
-| `hippocampe-ingestion` | 03:00 (Europe/Paris) | Charge les CSV GCS dans BQ raw |
-| `hippocampe-dbt` | 03:20 (Europe/Paris) | Transforme raw → dwh → dtm |
+| `demo-ingestion` | 03:00 (Europe/Paris) | Charge les CSV GCS dans BQ raw |
+| `demo-dbt` | 03:20 (Europe/Paris) | Transforme raw → dwh → dtm |
 
 ### BigQuery — datasets
 
 | Dataset | Contenu |
 |---|---|
-| `hippocampe_raw` | Tables brutes chargées depuis les CSV (`raw_hip_*`, `raw_sed_*`, …) |
-| `hippocampe_dwh` | Staging dbt (`stg_customers`, `stg_sale_documents`, …) |
-| `hippocampe_dtm` | Marts consommés par l'API (`mart_customer_rfm`, `mart_geo_sales`, …) |
+| `demo_raw` | Tables brutes chargées depuis les CSV (`raw_hip_*`, `raw_sed_*`, …) |
+| `demo_dwh` | Staging dbt (`stg_customers`, `stg_sale_documents`, …) |
+| `demo_dtm` | Marts consommés par l'API (`mart_customer_rfm`, `mart_geo_sales`, …) |
 
 ### Secrets (Secret Manager)
 
 | Secret | Contenu |
 |---|---|
-| `hippocampe-auth-secret` | Clé JWT NextAuth |
-| `hippocampe-auth-username` | Identifiant de connexion |
-| `hippocampe-auth-password-hash` | Hash bcrypt du mot de passe |
+| `demo-auth-secret` | Clé JWT NextAuth |
+| `demo-auth-username` | Identifiant de connexion |
+| `demo-auth-password-hash` | Hash bcrypt du mot de passe |
 
 ### Déploiement
 
@@ -211,9 +211,9 @@ Voir [`vault/Docs/DEPLOIEMENT-PROD.md`](vault/Docs/DEPLOIEMENT-PROD.md) pour le 
 
 | Code | Dossier GCS |
 |---|---|
-| `HIP` | `hippocampus/` |
+| `HIP` | `fashion_center/` |
 | `SED` | `sedaine/` |
-| `HPC` | `hippocampe/` |
+| `HPC` | `demo/` |
 | `ACC` | `accessoires/` |
 
 ---
@@ -224,26 +224,26 @@ Voir [`vault/Docs/DEPLOIEMENT-PROD.md`](vault/Docs/DEPLOIEMENT-PROD.md) pour le 
 GCS CSV (EBP)
     │
     ▼ ingestion/load_to_bq.py
-hippocampe_raw.raw_{boutique}_{table}   ← tout STRING, schéma depuis header CSV
+demo_raw.raw_{boutique}_{table}   ← tout STRING, schéma depuis header CSV
     │
     ▼ dbt/models/dwh/
-hippocampe_dwh.stg_customers            ← clients unifiés 4 boutiques
-hippocampe_dwh.stg_sale_documents       ← factures
-hippocampe_dwh.stg_sale_lines           ← lignes de factures
-hippocampe_dwh.stg_items                ← articles
-hippocampe_dwh.stg_stock_items          ← niveaux de stock
-hippocampe_dwh.stg_stock_movements      ← mouvements de stock
-hippocampe_dwh.stg_storehous            ← dépôts
+demo_dwh.stg_customers            ← clients unifiés 4 boutiques
+demo_dwh.stg_sale_documents       ← factures
+demo_dwh.stg_sale_lines           ← lignes de factures
+demo_dwh.stg_items                ← articles
+demo_dwh.stg_stock_items          ← niveaux de stock
+demo_dwh.stg_stock_movements      ← mouvements de stock
+demo_dwh.stg_storehous            ← dépôts
     │
     ▼ dbt/models/dtm/
-hippocampe_dtm.mart_customer_rfm        ← RFM + statuts clients
-hippocampe_dtm.mart_customer_detail     ← détail client + commandes
-hippocampe_dtm.mart_churn_alerts        ← scores churn + signaux
-hippocampe_dtm.mart_geo_sales           ← CA par département
-hippocampe_dtm.mart_geo_international   ← CA par pays
-hippocampe_dtm.mart_item_perf_by_season ← performance articles par saison
-hippocampe_dtm.mart_item_top5_by_customer
-hippocampe_dtm.mart_item_clients
-hippocampe_dtm.mart_customers_by_dept
-hippocampe_dtm.mart_stock_status        ← stocks + alertes urgence
+demo_dtm.mart_customer_rfm        ← RFM + statuts clients
+demo_dtm.mart_customer_detail     ← détail client + commandes
+demo_dtm.mart_churn_alerts        ← scores churn + signaux
+demo_dtm.mart_geo_sales           ← CA par département
+demo_dtm.mart_geo_international   ← CA par pays
+demo_dtm.mart_item_perf_by_season ← performance articles par saison
+demo_dtm.mart_item_top5_by_customer
+demo_dtm.mart_item_clients
+demo_dtm.mart_customers_by_dept
+demo_dtm.mart_stock_status        ← stocks + alertes urgence
 ```

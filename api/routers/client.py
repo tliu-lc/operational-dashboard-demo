@@ -18,7 +18,7 @@ def list_clients(boutique: str = Depends(valid_boutique)):
     with _lock:
         key = f"clients:{boutique}"
         if key not in _cache:
-            # boutique 'ALL' (Hippocampe) → lignes HIPP du mart (fusionnées par unified_key)
+            # boutique 'ALL' (Demo) → lignes HIPP du mart (fusionnées par unified_key)
             # autres boutiques → lignes par boutique normales
             if boutique == "ALL":
                 where_clause = "boutique_id = 'HIPP'"

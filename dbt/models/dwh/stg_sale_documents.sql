@@ -23,7 +23,7 @@ WITH unioned AS (
     SAFE_CAST(AmountVatIncluded AS FLOAT64)                                 AS amount_ttc,
     SAFE_CAST(DiscountRate AS FLOAT64)                                      AS discount_rate,
     SAFE_CAST(CommitmentsBalanceDue AS FLOAT64)                             AS balance_due
-  FROM `{{ env_var('GCP_PROJECT_ID') }}.hippocampe_raw.raw_{{ code_lower }}_saledocument`
+  FROM `{{ env_var('GCP_PROJECT_ID') }}.demo_raw.raw_{{ code_lower }}_saledocument`
   WHERE Id IS NOT NULL AND CAST(Id AS STRING) != ''
     AND CustomerId IS NOT NULL AND CAST(CustomerId AS STRING) != ''
 {% if not loop.last %} UNION ALL {% endif %}

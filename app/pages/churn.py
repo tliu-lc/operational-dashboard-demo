@@ -99,7 +99,7 @@ def render_signals(churn_signals, recency_days: int) -> str:
 
 def render_page() -> None:
     st.set_page_config(
-        page_title="Alertes churn — Hippocampe Monitor",
+        page_title="Alertes churn — Demo Monitor",
         layout="centered",
     )
     inject_light_theme()

@@ -10,12 +10,12 @@ BQ_DATASET  = os.environ["BQ_RAW_DATASET"]
 # BOUTIQUES_CONFIG : JSON env var permettant de configurer le mapping par client.
 # Format : '{"nom_dossier_gcs": "CODE_BOUTIQUE", ...}'
 # Exemple Maison Delor : '{"paris": "HIP", "lyon": "SED", "bordeaux": "HPC", "nantes": "ACC"}'
-# Par défaut : mapping Hippocampe (rétrocompatibilité)
+# Par défaut : mapping Demo (rétrocompatibilité)
 _boutiques_env = os.environ.get("BOUTIQUES_CONFIG", "")
 BOUTIQUES: dict[str, str] = json.loads(_boutiques_env) if _boutiques_env else {
-    "hippocampus": "HIP",
+    "fashion_center": "HIP",
     "sedaine":     "SED",
-    "hippocampe":  "HPC",
+    "demo":  "HPC",
     "accessoires": "ACC",
 }
 

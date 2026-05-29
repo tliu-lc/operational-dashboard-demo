@@ -10,7 +10,7 @@ output "api_url" {
 
 output "registry" {
   description = "Chemin Artifact Registry pour les images Docker"
-  value       = "${var.region}-docker.pkg.dev/${var.project_id}/hippocampe"
+  value       = "${var.region}-docker.pkg.dev/${var.project_id}/demo"
 }
 
 output "raw_bucket" {
@@ -20,5 +20,5 @@ output "raw_bucket" {
 
 output "service_account" {
   description = "Email du compte de service"
-  value       = google_service_account.hippocampe.email
+  value       = google_service_account.demo.email
 }

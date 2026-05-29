@@ -13,7 +13,7 @@ Pipeline manuel MVP — cf vault/Data/DATA-014.md §2.
 Volume attendu après filtres : 25k–40k établissements (DATA-014 §2).
 
 Usage minimal :
-    GCP_PROJECT_ID=hippocampe-xxx BQ_RAW_DATASET=hippocampe_raw \\
+    GCP_PROJECT_ID=demo-xxx BQ_RAW_DATASET=demo_raw \\
         python ingestion/import_sirene_naf4771z.py
 
 Options utiles :
@@ -158,7 +158,7 @@ def main() -> None:
                         help="Filtre et écrit le CSV local, sans upload BQ")
     args = parser.parse_args()
 
-    dataset = os.environ.get("BQ_RAW_DATASET", "hippocampe_raw")
+    dataset = os.environ.get("BQ_RAW_DATASET", "demo_raw")
     project = os.environ.get("GCP_PROJECT_ID")
     if not project and not args.dry_run:
         print("ERREUR : variable GCP_PROJECT_ID manquante "

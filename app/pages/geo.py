@@ -669,7 +669,7 @@ def _render_international_tab(
 
 def render_page() -> None:
     st.set_page_config(
-        page_title="Analyse géographique — Hippocampe Monitor",
+        page_title="Analyse géographique — Demo Monitor",
         layout="wide",
     )
     inject_light_theme()

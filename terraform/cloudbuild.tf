@@ -3,7 +3,7 @@
 # (Cloud Build → Triggers → Connect Repository → GitHub)
 
 resource "google_cloudbuild_trigger" "deploy_main" {
-  name        = "hippocampe-deploy-main"
+  name        = "demo-deploy-main"
   description = "Déploie l'application à chaque merge dans main"
   project     = var.project_id
   location    = var.region
@@ -18,15 +18,15 @@ resource "google_cloudbuild_trigger" "deploy_main" {
   }
 
   filename        = "cloudbuild.yaml"
-  service_account = google_service_account.hippocampe.id
+  service_account = google_service_account.demo.id
 
   substitutions = {
     _REGION   = var.region
-    _REGISTRY = "${var.region}-docker.pkg.dev/${var.project_id}/hippocampe"
+    _REGISTRY = "${var.region}-docker.pkg.dev/${var.project_id}/demo"
   }
 
   depends_on = [
     google_project_service.apis,
-    google_artifact_registry_repository.hippocampe,
+    google_artifact_registry_repository.demo,
   ]
 }

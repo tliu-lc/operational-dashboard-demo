@@ -13,7 +13,7 @@ import bronze
 import silver
 import gold
 
-DB_PATH = Path(__file__).parent.parent / "data" / "db" / "hippocampe.duckdb"
+DB_PATH = Path(__file__).parent.parent / "data" / "db" / "demo.duckdb"
 
 
 def main() -> None:

@@ -1,12 +1,12 @@
 # ingestion/
 
-Scripts d'ingestion vers BigQuery dataset `hippocampe_raw`.
+Scripts d'ingestion vers BigQuery dataset `demo_raw`.
 
 | Script | Source | Cible | Fréquence |
 |---|---|---|---|
-| `load_to_bq.py` | GCS (exports EBP CSV par boutique) | `hippocampe_raw.raw_<code>_<table>` | Quotidienne (Cloud Run Job `hippocampe-ingestion`) |
-| `import_sirene_naf4771z.py` | data.gouv.fr — StockEtablissement INSEE | `hippocampe_raw.raw_sirene_etab` | Manuel MVP (orchestration mensuelle = backlog) |
-| `setup_prospect_status.sql` | — (DDL one-shot) | `hippocampe_prospects.prospect_status` | Une fois par environnement |
+| `load_to_bq.py` | GCS (exports EBP CSV par boutique) | `demo_raw.raw_<code>_<table>` | Quotidienne (Cloud Run Job `demo-ingestion`) |
+| `import_sirene_naf4771z.py` | data.gouv.fr — StockEtablissement INSEE | `demo_raw.raw_sirene_etab` | Manuel MVP (orchestration mensuelle = backlog) |
+| `setup_prospect_status.sql` | — (DDL one-shot) | `demo_prospects.prospect_status` | Une fois par environnement |
 
 ---
 
@@ -32,11 +32,11 @@ Volume attendu après filtres : **25 000 à 40 000 établissements**.
 Import complet (téléchargement + filtrage + upload BQ) :
 
 ```bash
-GCP_PROJECT_ID=hippocampe-xxx BQ_RAW_DATASET=hippocampe_raw \
+GCP_PROJECT_ID=demo-xxx BQ_RAW_DATASET=demo_raw \
   python ingestion/import_sirene_naf4771z.py
 ```
 
-Le script écrit dans `hippocampe_raw.raw_sirene_etab` en mode `WRITE_TRUNCATE` (la table est entièrement remplacée à chaque run).
+Le script écrit dans `demo_raw.raw_sirene_etab` en mode `WRITE_TRUNCATE` (la table est entièrement remplacée à chaque run).
 
 ### Options
 
@@ -66,7 +66,7 @@ dbt run --select stg_prospects_sirene+ mart_prospects+ mart_prospects_par_depart
 
 ## `setup_prospect_status.sql` — Setup dataset éditable
 
-DDL one-shot qui crée le dataset `hippocampe_prospects` et la table `prospect_status` (statuts saisis manuellement par l'utilisateur via la page `/prospection`).
+DDL one-shot qui crée le dataset `demo_prospects` et la table `prospect_status` (statuts saisis manuellement par l'utilisateur via la page `/prospection`).
 
 **Pourquoi un fichier SQL standalone et pas un modèle dbt ?**
 La table doit **persister entre les imports SIRENE** : si elle était matérialisée par dbt, chaque `dbt run` écraserait les statuts saisis utilisateur. Le DDL est donc séparé du pipeline dbt et exécuté une seule fois par environnement.
@@ -92,7 +92,7 @@ Ordre d'exécution la première fois :
 bq --project_id=$GCP_PROJECT_ID query --use_legacy_sql=false < ingestion/setup_prospect_status.sql
 
 # 2. Importer la source SIRENE (peut être ré-exécuté à chaque release INSEE)
-GCP_PROJECT_ID=hippocampe-xxx BQ_RAW_DATASET=hippocampe_raw \
+GCP_PROJECT_ID=demo-xxx BQ_RAW_DATASET=demo_raw \
   python ingestion/import_sirene_naf4771z.py
 
 # 3. Rafraîchir les marts dbt

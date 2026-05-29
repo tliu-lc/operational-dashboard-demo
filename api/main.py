@@ -14,11 +14,11 @@ from google.auth.transport import requests as grequests
 from api.routers import rfm, churn, client, geo, stock, perf_season, monitoring, articles, payments, analyse, prospects
 
 TRUSTED_SA_EMAILS = {
-    "hippocampe-frontend-sa@hippocampe-monitor-prod.iam.gserviceaccount.com",
-    "hippocampe-sa@hippocampe-monitor-prod.iam.gserviceaccount.com",  # backward compat
+    "demo-frontend-sa@demo-monitor-prod.iam.gserviceaccount.com",
+    "demo-sa@demo-monitor-prod.iam.gserviceaccount.com",  # backward compat
 }
 
-app = FastAPI(title="HIPPOCAMPE-MONITOR API")
+app = FastAPI(title="DEMO-MONITOR API")
 
 app.add_middleware(
     CORSMiddleware,
@@ -74,7 +74,7 @@ def health():
 
 @app.get("/api/config")
 def get_config():
-    app_name = os.getenv("APP_NAME", "HIPPOCAMPE")
+    app_name = os.getenv("APP_NAME", "DEMO")
     boutiques_env = os.getenv("APP_BOUTIQUES_JSON", "")
     if boutiques_env:
         import json

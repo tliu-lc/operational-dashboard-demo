@@ -1,10 +1,10 @@
 # ── Artifact Registry — dépôt Docker ──────────────────────────────────────
 
-resource "google_artifact_registry_repository" "hippocampe" {
+resource "google_artifact_registry_repository" "demo" {
   provider      = google
   location      = var.region
-  repository_id = "hippocampe"
-  description   = "Images Docker HIPPOCAMPE-MONITOR"
+  repository_id = "demo"
+  description   = "Images Docker DEMO-MONITOR"
   format        = "DOCKER"
   project       = var.project_id
 

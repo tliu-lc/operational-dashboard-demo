@@ -4,13 +4,13 @@
 
 substitutions:
   _REGION: europe-west1
-  _REGISTRY: europe-west1-docker.pkg.dev/delor-demo/hippocampe
-  _API_SERVICE: hippocampe-api
-  _FRONTEND_SERVICE: hippocampe-frontend
-  _SA: hippocampe-sa
+  _REGISTRY: europe-west1-docker.pkg.dev/delor-demo/demo
+  _API_SERVICE: demo-api
+  _FRONTEND_SERVICE: demo-frontend
+  _SA: demo-sa
   # Mapping dossiers GCS → codes boutiques (JSON).
   # Modifier pour chaque client : '{"paris":"HIP","lyon":"SED","bordeaux":"HPC","nantes":"ACC"}'
-  _BOUTIQUES_CONFIG: '{"hippocampus":"HIP","sedaine":"SED","hippocampe":"HPC","accessoires":"ACC"}'
+  _BOUTIQUES_CONFIG: '{"fashion_center":"HIP","sedaine":"SED","demo":"HPC","accessoires":"ACC"}'
   _APP_NAME: MAISON DELOR
 
 steps:
@@ -77,13 +77,13 @@ steps:
       - --platform=managed
       - --ingress=all
       - --no-allow-unauthenticated
-      - --service-account=hippocampe-api-sa@$PROJECT_ID.iam.gserviceaccount.com
+      - --service-account=demo-api-sa@$PROJECT_ID.iam.gserviceaccount.com
       - --memory=1Gi
       - --cpu=1
       - --port=8000
       - --min-instances=0
       - --max-instances=3
-      - --set-env-vars=GCP_PROJECT_ID=$PROJECT_ID,BQ_RAW_DATASET=hippocampe_raw,BQ_DWH_DATASET=hippocampe_dwh,BQ_DTM_DATASET=hippocampe_dtm,SKIP_AUTH_MIDDLEWARE=true
+      - --set-env-vars=GCP_PROJECT_ID=$PROJECT_ID,BQ_RAW_DATASET=demo_raw,BQ_DWH_DATASET=demo_dwh,BQ_DTM_DATASET=demo_dtm,SKIP_AUTH_MIDDLEWARE=true
     waitFor: [push-api]
 
   # ── 6. Récupérer l'URL API ───────────────────────────────────────────────
@@ -115,14 +115,14 @@ steps:
           --platform=managed \
           --ingress=all \
           --allow-unauthenticated \
-          --service-account=hippocampe-frontend-sa@$PROJECT_ID.iam.gserviceaccount.com \
+          --service-account=demo-frontend-sa@$PROJECT_ID.iam.gserviceaccount.com \
           --memory=512Mi \
           --cpu=1 \
           --port=3000 \
           --min-instances=0 \
           --max-instances=5 \
           --update-env-vars="API_URL=$$API_URL,NEXT_PUBLIC_API_URL=,APP_NAME=$_APP_NAME" \
-          --set-secrets="AUTH_SECRET=hippocampe-auth-secret:latest,AUTH_USERS=hippocampe-auth-users:latest"
+          --set-secrets="AUTH_SECRET=demo-auth-secret:latest,AUTH_USERS=demo-auth-users:latest"
     waitFor: [push-frontend, get-api-url]
 
 options:

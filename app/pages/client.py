@@ -574,7 +574,7 @@ def _render_detail(client_id: str, selected_boutique: str, boutique_labels: dict
 
 def render_page() -> None:
     st.set_page_config(
-        page_title="Fiche client — Hippocampe Monitor",
+        page_title="Fiche client — Demo Monitor",
         layout="wide",
     )
     inject_light_theme()

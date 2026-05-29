@@ -4,7 +4,7 @@ from pathlib import Path
 import duckdb
 
 ROOT = Path(__file__).parent.parent
-DB_PATH = ROOT / "data" / "db" / "hippocampe.duckdb"
+DB_PATH = ROOT / "data" / "db" / "demo.duckdb"
 REF_DIR = ROOT / "data" / "ref"
 
 

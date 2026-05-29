@@ -20,7 +20,7 @@ WITH unioned AS (
       WHEN CAST(DocumentType AS STRING) = '1' AND CAST(DocumentSubType AS STRING) = '6' THEN 'transfert'
       ELSE 'autre'
     END                                                                             AS mouvement_type
-  FROM `{{ env_var('GCP_PROJECT_ID') }}.hippocampe_raw.raw_{{ code_lower }}_stockmovement`
+  FROM `{{ env_var('GCP_PROJECT_ID') }}.demo_raw.raw_{{ code_lower }}_stockmovement`
   WHERE ItemId IS NOT NULL
 {% if not loop.last %} UNION ALL {% endif %}
 {% endfor %}

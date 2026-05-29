@@ -4,7 +4,7 @@
 -- pour récupérer categorieJuridique + raison sociale + nom/prénom EI.
 -- Spec : vault/Data/DATA-014.md §3.1
 WITH etab AS (
-  SELECT * FROM `{{ env_var('GCP_PROJECT_ID') }}.hippocampe_raw.raw_sirene_etab`
+  SELECT * FROM `{{ env_var('GCP_PROJECT_ID') }}.demo_raw.raw_sirene_etab`
 ),
 unitelegale AS (
   SELECT
@@ -13,7 +13,7 @@ unitelegale AS (
     NULLIF(TRIM(categorieJuridiqueUniteLegale), '') AS categorie_juridique,
     NULLIF(TRIM(nomUniteLegale),                '') AS nom_unite_legale,
     NULLIF(TRIM(prenomUsuelUniteLegale),        '') AS prenom_unite_legale
-  FROM `{{ env_var('GCP_PROJECT_ID') }}.hippocampe_raw.raw_sirene_unitelegale`
+  FROM `{{ env_var('GCP_PROJECT_ID') }}.demo_raw.raw_sirene_unitelegale`
 )
 SELECT
   CAST(e.siret AS STRING)                                                     AS siret,

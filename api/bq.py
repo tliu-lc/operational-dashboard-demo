@@ -7,8 +7,8 @@ _client: bigquery.Client | None = None
 _lock = threading.Lock()
 
 PROJECT   = os.environ.get("GCP_PROJECT_ID", "")
-DTM       = os.environ.get("BQ_DTM_DATASET", "hippocampe_dtm")
-DWH       = os.environ.get("BQ_DWH_DATASET", "hippocampe_dwh")
+DTM       = os.environ.get("BQ_DTM_DATASET", "demo_dtm")
+DWH       = os.environ.get("BQ_DWH_DATASET", "demo_dwh")
 
 
 def get_bq() -> bigquery.Client:

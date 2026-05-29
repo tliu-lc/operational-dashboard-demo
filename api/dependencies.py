@@ -6,7 +6,7 @@ BOUTIQUES = {"SED", "HIP", "HPC", "ACC", "ALL"}
 
 # Groupes : un code de boutique → liste de boutique_id réels en base
 BOUTIQUE_GROUPS: dict[str, list[str]] = {
-    "ALL": ["SED", "HIP"],   # "Hippocampe" = Sédaine + Fashion Center
+    "ALL": ["SED", "HIP"],   # "Demo" = Sédaine + Fashion Center
 }
 
 VALID_PERIODS = {0, 1, 2, 3, 6, 12, 24, 36}

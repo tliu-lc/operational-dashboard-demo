@@ -13,7 +13,7 @@ WITH unioned AS (
     SAFE_CAST(VirtualStock AS FLOAT64)                      AS virtual_stock,
     SAFE_CAST(OrderedQuantity AS FLOAT64)                   AS ordered_quantity,
     SAFE_CAST(SuppliersOrderedQuantity AS FLOAT64)          AS suppliers_ordered_quantity
-  FROM `{{ env_var('GCP_PROJECT_ID') }}.hippocampe_raw.raw_{{ code_lower }}_stockitem`
+  FROM `{{ env_var('GCP_PROJECT_ID') }}.demo_raw.raw_{{ code_lower }}_stockitem`
   WHERE ItemId IS NOT NULL
 {% if not loop.last %} UNION ALL {% endif %}
 {% endfor %}

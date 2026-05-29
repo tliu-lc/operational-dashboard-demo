@@ -237,7 +237,7 @@ hipp_fallback AS (
 ),
 
 -- Format final HIPP (merged) : on garde l'ID réel de la boutique gagnante
--- (= 1 client = 1 URL, qu'on soit sur Hippocampe ou sur sa boutique d'origine)
+-- (= 1 client = 1 URL, qu'on soit sur Demo ou sur sa boutique d'origine)
 hipp_merged_final AS (
     SELECT
         top_customer_key                                                                AS customer_key,

@@ -8,13 +8,13 @@ from pathlib import Path
 import duckdb
 
 ROOT = Path(__file__).parent.parent
-DB_PATH = ROOT / "data" / "db" / "hippocampe.duckdb"
+DB_PATH = ROOT / "data" / "db" / "demo.duckdb"
 
 BOUTIQUE_NAMES = {
-    "ACC": "HIPPOCAMPE ACCESSOIRES",
-    "HIP": "HIPPOCAMPUS",
+    "ACC": "DEMO ACCESSOIRES",
+    "HIP": "FASHION_CENTER",
     "SED": "SEDAINE",
-    "HPC": "HIPPOCAMPE",
+    "HPC": "DEMO",
 }
 
 

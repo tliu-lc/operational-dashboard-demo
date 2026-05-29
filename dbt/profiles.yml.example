@@ -1,11 +1,11 @@
-hippocampe:
+demo:
   target: prod
   outputs:
     prod:
       type: bigquery
       method: oauth
       project: "{{ env_var('GCP_PROJECT_ID') }}"
-      dataset: hippocampe_dwh
+      dataset: demo_dwh
       location: europe-west1
       threads: 4
       timeout_seconds: 300
@@ -13,7 +13,7 @@ hippocampe:
       type: bigquery
       method: oauth
       project: "{{ env_var('GCP_PROJECT_ID') }}"
-      dataset: hippocampe_dwh_dev
+      dataset: demo_dwh_dev
       location: europe-west1
       threads: 2
       timeout_seconds: 300

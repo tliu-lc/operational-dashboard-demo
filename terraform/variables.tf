@@ -16,7 +16,7 @@ variable "github_owner" {
 
 variable "github_repo" {
   type        = string
-  default     = "hippocampe-monitor"
+  default     = "demo-monitor"
   description = "Nom du dépôt GitHub"
 }
 

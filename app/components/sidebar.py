@@ -1,6 +1,6 @@
 """
 Shared sidebar component — boutique filter (Sprint 05/06).
-Mono-DB: hippocampe.duckdb. SEDAINE selected by default. No ALL option.
+Mono-DB: demo.duckdb. SEDAINE selected by default. No ALL option.
 Client search is handled directly in client.py.
 """
 import logging
@@ -11,13 +11,13 @@ import streamlit as st
 logger = logging.getLogger(__name__)
 
 DB_DIR = Path(__file__).parent.parent.parent / "data" / "db"
-DB_PATH = DB_DIR / "hippocampe.duckdb"
+DB_PATH = DB_DIR / "demo.duckdb"
 
 BOUTIQUES = [
     {"id": "SED", "label": "SEDAINE"},
-    {"id": "HIP", "label": "HIPPOCAMPUS"},
-    {"id": "HPC", "label": "HIPPOCAMPE"},
-    {"id": "ACC", "label": "HIPPOCAMPE ACCESSOIRES"},
+    {"id": "HIP", "label": "FASHION_CENTER"},
+    {"id": "HPC", "label": "DEMO"},
+    {"id": "ACC", "label": "DEMO ACCESSOIRES"},
 ]
 
 BOUTIQUE_IDS = [b["id"] for b in BOUTIQUES]

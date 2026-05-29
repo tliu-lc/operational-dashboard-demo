@@ -1,13 +1,13 @@
 # ── Compte de service principal ────────────────────────────────────────────
 
-resource "google_service_account" "hippocampe" {
-  account_id   = "hippocampe-sa"
-  display_name = "Hippocampe Monitor — Service Account"
+resource "google_service_account" "demo" {
+  account_id   = "demo-sa"
+  display_name = "Demo Monitor — Service Account"
   project      = var.project_id
 }
 
 locals {
-  sa = "serviceAccount:${google_service_account.hippocampe.email}"
+  sa = "serviceAccount:${google_service_account.demo.email}"
 }
 
 # ── Rôles projet ───────────────────────────────────────────────────────────
@@ -29,7 +29,7 @@ resource "google_project_iam_member" "roles" {
     "roles/cloudscheduler.admin",             # gérer les jobs Scheduler
     "roles/cloudbuild.builds.editor",         # gérer les triggers Cloud Build
     "roles/iam.securityAdmin",                # getIamPolicy sur les service accounts
-    "roles/iam.serviceAccountAdmin",          # créer/supprimer des service accounts (requis pour hippocampe-ebp-sa)
+    "roles/iam.serviceAccountAdmin",          # créer/supprimer des service accounts (requis pour demo-ebp-sa)
     "roles/serviceusage.serviceUsageAdmin",   # activer/désactiver les APIs GCP
   ])
 
@@ -40,7 +40,7 @@ resource "google_project_iam_member" "roles" {
 
 # Le SA peut s'impersonner lui-même (nécessaire pour Cloud Run deploy)
 resource "google_service_account_iam_member" "self_impersonate" {
-  service_account_id = google_service_account.hippocampe.name
+  service_account_id = google_service_account.demo.name
   role               = "roles/iam.serviceAccountUser"
   member             = local.sa
 }
@@ -52,7 +52,7 @@ resource "google_project_iam_member" "cloudbuild_sa" {
   member  = "serviceAccount:${data.google_project.project.number}@cloudbuild.gserviceaccount.com"
 }
 
-# hippocampe-sa (deploy) peut actAs sur chaque SA runtime
+# demo-sa (deploy) peut actAs sur chaque SA runtime
 # Requis pour assigner ces SAs aux services/jobs Cloud Run via Terraform
 resource "google_service_account_iam_member" "deploy_actas_api" {
   service_account_id = google_service_account.api.name
@@ -85,8 +85,8 @@ data "google_project" "project" {
 # ── Compte de service machine EBP (export CSV → GCS) ───────────────────────
 
 resource "google_service_account" "ebp" {
-  account_id   = "hippocampe-ebp-sa"
-  display_name = "Hippocampe Monitor — Export EBP vers GCS"
+  account_id   = "demo-ebp-sa"
+  display_name = "Demo Monitor — Export EBP vers GCS"
   project      = var.project_id
 }
 
@@ -100,8 +100,8 @@ resource "google_storage_bucket_iam_member" "ebp_raw_writer" {
 # ── SA runtime — API FastAPI ───────────────────────────────────────────────
 
 resource "google_service_account" "api" {
-  account_id   = "hippocampe-api-sa"
-  display_name = "Hippocampe Monitor — Cloud Run API"
+  account_id   = "demo-api-sa"
+  display_name = "Demo Monitor — Cloud Run API"
   project      = var.project_id
 }
 
@@ -120,8 +120,8 @@ resource "google_project_iam_member" "api_roles" {
 # ── SA runtime — Frontend Next.js ─────────────────────────────────────────
 
 resource "google_service_account" "frontend" {
-  account_id   = "hippocampe-frontend-sa"
-  display_name = "Hippocampe Monitor — Cloud Run Frontend"
+  account_id   = "demo-frontend-sa"
+  display_name = "Demo Monitor — Cloud Run Frontend"
   project      = var.project_id
 }
 
@@ -158,8 +158,8 @@ resource "google_secret_manager_secret_iam_member" "frontend_auth_users" {
 # ── SA runtime — Job ingestion ─────────────────────────────────────────────
 
 resource "google_service_account" "ingestion" {
-  account_id   = "hippocampe-ingestion-sa"
-  display_name = "Hippocampe Monitor — Cloud Run Job ingestion"
+  account_id   = "demo-ingestion-sa"
+  display_name = "Demo Monitor — Cloud Run Job ingestion"
   project      = var.project_id
 }
 
@@ -185,8 +185,8 @@ resource "google_project_iam_member" "ingestion_roles" {
 # ── SA runtime — Job dbt ───────────────────────────────────────────────────
 
 resource "google_service_account" "dbt" {
-  account_id   = "hippocampe-dbt-sa"
-  display_name = "Hippocampe Monitor — Cloud Run Job dbt"
+  account_id   = "demo-dbt-sa"
+  display_name = "Demo Monitor — Cloud Run Job dbt"
   project      = var.project_id
 }
 

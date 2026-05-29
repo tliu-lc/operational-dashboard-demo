@@ -12,13 +12,13 @@ import duckdb
 
 ROOT = Path(__file__).parent.parent
 EXPORT_DIR = ROOT / "export_2026-05-06_22h15"
-DB_PATH = ROOT / "data" / "db" / "hippocampe.duckdb"
+DB_PATH = ROOT / "data" / "db" / "demo.duckdb"
 
 BOUTIQUES = {
-    "ACC": "HIPPOCAMPE ACCESSOIRES_0895452f-b7c1-4c00-a316-c6a6d0ea4bf4",
-    "HIP": "HIPPOCAMPUS_0895452f-b7c1-4c00-a316-c6a6d0ea4bf4",
+    "ACC": "DEMO ACCESSOIRES_0895452f-b7c1-4c00-a316-c6a6d0ea4bf4",
+    "HIP": "FASHION_CENTER_0895452f-b7c1-4c00-a316-c6a6d0ea4bf4",
     "SED": "SEDAINE_0895452f-b7c1-4c00-a316-c6a6d0ea4bf4",
-    "HPC": "HIPPOCAMPE_0895452f-b7c1-4c00-a316-c6a6d0ea4bf4",
+    "HPC": "DEMO_0895452f-b7c1-4c00-a316-c6a6d0ea4bf4",
 }
 
 INGESTED_FILES = [

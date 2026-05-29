@@ -1,5 +1,5 @@
 locals {
-  registry = "${var.region}-docker.pkg.dev/${var.project_id}/hippocampe"
+  registry = "${var.region}-docker.pkg.dev/${var.project_id}/demo"
   # Image placeholder — remplacée à chaque déploiement Cloud Build
   placeholder_image = "gcr.io/cloudrun/placeholder"
 }
@@ -7,7 +7,7 @@ locals {
 # ── Service FastAPI (public réseau, protégé par IAM — identity token requis) ──────
 
 resource "google_cloud_run_v2_service" "api" {
-  name     = "hippocampe-api"
+  name     = "demo-api"
   location = var.region
   project  = var.project_id
   ingress  = "INGRESS_TRAFFIC_ALL"
@@ -38,15 +38,15 @@ resource "google_cloud_run_v2_service" "api" {
       }
       env {
         name  = "BQ_RAW_DATASET"
-        value = "hippocampe_raw"
+        value = "demo_raw"
       }
       env {
         name  = "BQ_DWH_DATASET"
-        value = "hippocampe_dwh"
+        value = "demo_dwh"
       }
       env {
         name  = "BQ_DTM_DATASET"
-        value = "hippocampe_dtm"
+        value = "demo_dtm"
       }
 
       ports {
@@ -56,7 +56,7 @@ resource "google_cloud_run_v2_service" "api" {
   }
 
   depends_on = [
-    google_artifact_registry_repository.hippocampe,
+    google_artifact_registry_repository.demo,
   ]
 
   lifecycle {
@@ -73,7 +73,7 @@ resource "google_cloud_run_v2_service" "api" {
 # ── Service Next.js (public) ───────────────────────────────────────────────
 
 resource "google_cloud_run_v2_service" "frontend" {
-  name     = "hippocampe-frontend"
+  name     = "demo-frontend"
   location = var.region
   project  = var.project_id
   ingress  = "INGRESS_TRAFFIC_ALL"
@@ -170,7 +170,7 @@ resource "google_cloud_run_v2_service_iam_member" "frontend_public" {
 # ── Cloud Run Jobs (post-migration BQ) ────────────────────────────────────
 
 resource "google_cloud_run_v2_job" "ingestion" {
-  name     = "hippocampe-ingestion"
+  name     = "demo-ingestion"
   location = var.region
   project  = var.project_id
 
@@ -191,7 +191,7 @@ resource "google_cloud_run_v2_job" "ingestion" {
         }
         env {
           name  = "BQ_RAW_DATASET"
-          value = "hippocampe_raw"
+          value = "demo_raw"
         }
 
         resources {
@@ -212,11 +212,11 @@ resource "google_cloud_run_v2_job" "ingestion" {
     ]
   }
 
-  depends_on = [google_artifact_registry_repository.hippocampe]
+  depends_on = [google_artifact_registry_repository.demo]
 }
 
 resource "google_cloud_run_v2_job" "dbt" {
-  name     = "hippocampe-dbt"
+  name     = "demo-dbt"
   location = var.region
   project  = var.project_id
 
@@ -250,5 +250,5 @@ resource "google_cloud_run_v2_job" "dbt" {
     ]
   }
 
-  depends_on = [google_artifact_registry_repository.hippocampe]
+  depends_on = [google_artifact_registry_repository.demo]
 }
