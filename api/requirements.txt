@@ -1,0 +1,10 @@
+fastapi==0.115.*
+python-dotenv==1.*
+uvicorn[standard]==0.30.*
+pandas==2.*
+numpy==1.*
+google-cloud-bigquery==3.*
+db-dtypes==1.*
+pyarrow==17.*
+cachetools==5.*
+pycountry==24.*

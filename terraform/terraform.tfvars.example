@@ -1,0 +1,2 @@
+# Toutes les variables sont dans terraform.auto.tfvars (committé, chargé automatiquement).
+# terraform.tfvars n'est plus nécessaire sauf pour surcharger une valeur localement.

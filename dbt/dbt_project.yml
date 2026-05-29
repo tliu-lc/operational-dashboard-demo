@@ -1,0 +1,21 @@
+name: hippocampe
+version: "1.0.0"
+config-version: 2
+profile: hippocampe
+
+model-paths: ["models"]
+seed-paths:  ["seeds"]
+macro-paths: ["macros"]
+
+models:
+  hippocampe:
+    dwh:
+      +materialized: table
+      +dataset: hippocampe_dwh
+    dtm:
+      +materialized: table
+      +dataset: hippocampe_dtm
+
+seeds:
+  hippocampe:
+    +dataset: hippocampe_dwh

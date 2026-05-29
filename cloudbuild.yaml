@@ -1,0 +1,204 @@
+# Cloud Build — HIPPOCAMPE-MONITOR
+# Déclenché sur merge dans main.
+# Ordre : Terraform (infra) → Build → Push → Deploy
+
+substitutions:
+  _REGION: europe-west1
+  _REGISTRY: europe-west1-docker.pkg.dev/$PROJECT_ID/hippocampe
+  _API_SERVICE: hippocampe-api
+  _FRONTEND_SERVICE: hippocampe-frontend
+  _SA: hippocampe-sa
+  _TF_STATE_BUCKET: delor-demo-tfstate
+  _GITHUB_OWNER: tliu-lc
+
+steps:
+
+  # ── Terraform : init ────────────────────────────────────────────────────
+
+  - id: tf-init
+    name: hashicorp/terraform:1.7
+    entrypoint: terraform
+    args:
+      - init
+      - -input=false
+      - -backend-config=bucket=$_TF_STATE_BUCKET
+      - -backend-config=prefix=terraform/state
+    dir: terraform
+    waitFor: ["-"]
+
+  # ── Terraform : plan ────────────────────────────────────────────────────
+
+  - id: tf-plan
+    name: hashicorp/terraform:1.7
+    entrypoint: terraform
+    args:
+      - plan
+      - -input=false
+      - -var=project_id=$PROJECT_ID
+      - -var=region=$_REGION
+      - -var=github_owner=$_GITHUB_OWNER
+      - -out=/workspace/tfplan
+    dir: terraform
+    waitFor: [tf-init]
+
+  # ── Terraform : apply ───────────────────────────────────────────────────
+
+  - id: tf-apply
+    name: hashicorp/terraform:1.7
+    entrypoint: terraform
+    args:
+      - apply
+      - -input=false
+      - /workspace/tfplan
+    dir: terraform
+    waitFor: [tf-plan]
+
+  # ── Build images (parallèle après tf-apply) ─────────────────────────────
+
+  - id: build-api
+    name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -f
+      - Dockerfile.api
+      - -t
+      - $_REGISTRY/api:$SHORT_SHA
+      - -t
+      - $_REGISTRY/api:latest
+      - --cache-from
+      - $_REGISTRY/api:latest
+      - .
+    waitFor: [tf-apply]
+
+  - id: build-frontend
+    name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -f
+      - Dockerfile.frontend
+      - -t
+      - $_REGISTRY/frontend:$SHORT_SHA
+      - -t
+      - $_REGISTRY/frontend:latest
+      - --cache-from
+      - $_REGISTRY/frontend:latest
+      - .
+    waitFor: [tf-apply]
+
+  # ── Push images (parallèle) ─────────────────────────────────────────────
+
+  - id: push-api
+    name: gcr.io/cloud-builders/docker
+    args: [push, --all-tags, $_REGISTRY/api]
+    waitFor: [build-api]
+
+  - id: push-frontend
+    name: gcr.io/cloud-builders/docker
+    args: [push, --all-tags, $_REGISTRY/frontend]
+    waitFor: [build-frontend]
+
+  # ── Déployer FastAPI (service interne) ──────────────────────────────────
+
+  - id: deploy-api
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - $_API_SERVICE
+      - --image=$_REGISTRY/api:$SHORT_SHA
+      - --region=$_REGION
+      - --platform=managed
+      - --ingress=all
+      - --service-account=$_SA@$PROJECT_ID.iam.gserviceaccount.com
+      - --memory=1Gi
+      - --cpu=1
+      - --min-instances=0
+      - --max-instances=3
+    waitFor: [push-api]
+
+  # ── Récupérer l'URL interne FastAPI ─────────────────────────────────────
+
+  - id: get-api-url
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        gcloud run services describe $_API_SERVICE \
+          --region=$_REGION \
+          --format='value(status.url)' > /workspace/api_url.txt
+        echo "API URL : $(cat /workspace/api_url.txt)"
+    waitFor: [deploy-api]
+
+  # ── Déployer Next.js (service public) ───────────────────────────────────
+
+  - id: deploy-frontend
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        API_URL=$$(cat /workspace/api_url.txt)
+        gcloud run deploy $_FRONTEND_SERVICE \
+          --image=$_REGISTRY/frontend:$SHORT_SHA \
+          --region=$_REGION \
+          --platform=managed \
+          --ingress=all \
+          --allow-unauthenticated \
+          --service-account=$_SA@$PROJECT_ID.iam.gserviceaccount.com \
+          --memory=512Mi \
+          --cpu=1 \
+          --min-instances=0 \
+          --max-instances=5 \
+          --update-env-vars="API_URL=$$API_URL,NEXT_PUBLIC_API_URL=" \
+          --set-secrets="AUTH_SECRET=hippocampe-auth-secret:latest,AUTH_USERS=hippocampe-auth-users:latest"
+    waitFor: [push-frontend, get-api-url]
+
+  # ── Build Cloud Run Jobs ingestion + dbt ────────────────────────────────
+
+  - id: build-ingestion
+    name: gcr.io/cloud-builders/docker
+    args: [build, -f, ingestion/Dockerfile, -t, "$_REGISTRY/ingestion:$SHORT_SHA", -t, "$_REGISTRY/ingestion:latest", ingestion/]
+    waitFor: [tf-apply]
+
+  - id: build-dbt
+    name: gcr.io/cloud-builders/docker
+    args: [build, -f, dbt/Dockerfile, -t, "$_REGISTRY/dbt:$SHORT_SHA", -t, "$_REGISTRY/dbt:latest", dbt/]
+    waitFor: [tf-apply]
+
+  - id: push-ingestion
+    name: gcr.io/cloud-builders/docker
+    args: [push, --all-tags, "$_REGISTRY/ingestion"]
+    waitFor: [build-ingestion]
+
+  - id: push-dbt
+    name: gcr.io/cloud-builders/docker
+    args: [push, --all-tags, "$_REGISTRY/dbt"]
+    waitFor: [build-dbt]
+
+  - id: update-job-ingestion
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: gcloud
+    args: [run, jobs, update, hippocampe-ingestion, "--image=$_REGISTRY/ingestion:$SHORT_SHA", "--region=$_REGION"]
+    waitFor: [push-ingestion]
+
+  - id: update-job-dbt
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: gcloud
+    args: [run, jobs, update, hippocampe-dbt, "--image=$_REGISTRY/dbt:$SHORT_SHA", "--region=$_REGION"]
+    waitFor: [push-dbt]
+
+images:
+  - $_REGISTRY/api:$SHORT_SHA
+  - $_REGISTRY/api:latest
+  - $_REGISTRY/frontend:$SHORT_SHA
+  - $_REGISTRY/frontend:latest
+  - $_REGISTRY/ingestion:$SHORT_SHA
+  - $_REGISTRY/ingestion:latest
+  - $_REGISTRY/dbt:$SHORT_SHA
+  - $_REGISTRY/dbt:latest
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+  machineType: E2_HIGHCPU_8
