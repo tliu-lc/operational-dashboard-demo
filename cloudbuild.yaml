@@ -77,7 +77,7 @@ steps:
       - --platform=managed
       - --ingress=all
       - --no-allow-unauthenticated
-      - --service-account=$_SA@$PROJECT_ID.iam.gserviceaccount.com
+      - --service-account=hippocampe-api-sa@$PROJECT_ID.iam.gserviceaccount.com
       - --memory=1Gi
       - --cpu=1
       - --port=8000
@@ -115,7 +115,7 @@ steps:
           --platform=managed \
           --ingress=all \
           --allow-unauthenticated \
-          --service-account=$_SA@$PROJECT_ID.iam.gserviceaccount.com \
+          --service-account=hippocampe-frontend-sa@$PROJECT_ID.iam.gserviceaccount.com \
           --memory=512Mi \
           --cpu=1 \
           --port=3000 \
