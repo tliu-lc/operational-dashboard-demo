@@ -209,6 +209,7 @@ def get_top_clients(
 def _fetch_top_clients(boutique: str, start: date, end: date):
     df = run_query(
         f"""SELECT c.name AS customer_name,
+                   ANY_VALUE(c.id) AS customer_id,
                    SUM(d.amount_ht) AS ca,
                    COUNT(DISTINCT d.id) AS nb_orders,
                    SAFE_DIVIDE(SUM(d.amount_ht), COUNT(DISTINCT d.id)) AS panier_moyen
@@ -234,6 +235,7 @@ def _fetch_top_clients(boutique: str, start: date, end: date):
         "clients": [
             {
                 "customer_name": str(r["customer_name"]),
+                "customer_id":   str(r["customer_id"]) if pd.notna(r["customer_id"]) else None,
                 "ca": round(float(r["ca"]), 2) if pd.notna(r["ca"]) else 0.0,
                 "nb_orders": int(r["nb_orders"]) if pd.notna(r["nb_orders"]) else 0,
                 "panier_moyen": round(float(r["panier_moyen"]), 2) if pd.notna(r["panier_moyen"]) else 0.0,

@@ -1,4 +1,5 @@
 """Ingestion GCS → BigQuery tables RAW. Called by Cloud Run Job."""
+import json
 import os
 from google.cloud import bigquery, storage
 
@@ -6,7 +7,12 @@ PROJECT_ID  = os.environ["GCP_PROJECT_ID"]
 GCS_BUCKET  = os.environ["GCS_BUCKET"]
 BQ_DATASET  = os.environ["BQ_RAW_DATASET"]
 
-BOUTIQUES = {
+# BOUTIQUES_CONFIG : JSON env var permettant de configurer le mapping par client.
+# Format : '{"nom_dossier_gcs": "CODE_BOUTIQUE", ...}'
+# Exemple Maison Delor : '{"paris": "HIP", "lyon": "SED", "bordeaux": "HPC", "nantes": "ACC"}'
+# Par défaut : mapping Hippocampe (rétrocompatibilité)
+_boutiques_env = os.environ.get("BOUTIQUES_CONFIG", "")
+BOUTIQUES: dict[str, str] = json.loads(_boutiques_env) if _boutiques_env else {
     "hippocampus": "HIP",
     "sedaine":     "SED",
     "hippocampe":  "HPC",

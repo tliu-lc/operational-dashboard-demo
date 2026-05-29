@@ -8,6 +8,7 @@ import {
   fetchAnalyseTopClients,
 } from "@/lib/api";
 import type { CaParJourPoint, CaParMoisPoint, VentesSemainePoint, TopClient } from "@/lib/api";
+import Link from "next/link";
 import {
   BarChart, Bar, Cell,
   XAxis, YAxis, CartesianGrid, Tooltip,
@@ -223,9 +224,16 @@ export default function AnalysePage() {
           <SectionTitle>Chiffre d&apos;affaires par jour</SectionTitle>
           <DateRangePicker presets={PRESETS_JOUR} value={rangeJour} onChange={setRangeJour} />
         </div>
-        <p className="text-xs text-fg-subtle mb-3">
-          La lettre sous chaque date indique le jour de la semaine. Les barres orange = weekend.
-        </p>
+        <div className="flex items-center gap-5 mb-3">
+          <div className="flex items-center gap-1.5">
+            <div className="w-3 h-3 rounded-sm" style={{ background: colors.primary }} />
+            <span className="text-xs text-fg-subtle">Jour de semaine</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <div className="w-3 h-3 rounded-sm" style={{ background: colors.warning, opacity: 0.8 }} />
+            <span className="text-xs text-fg-subtle">Weekend</span>
+          </div>
+        </div>
         {loadingJour ? (
           <div className="h-64 bg-surface-3 rounded animate-pulse" />
         ) : caJour.length === 0 ? (
@@ -349,7 +357,14 @@ export default function AnalysePage() {
                 {topClients.map((c, i) => (
                   <tr key={c.customer_name} className="hover:bg-surface-3">
                     <td className="py-2 px-3 text-fg-subtle font-mono text-xs">{i + 1}</td>
-                    <td className="py-2 px-3 font-medium text-fg">{c.customer_name}</td>
+                    <td className="py-2 px-3 font-medium text-fg">
+                      {c.customer_id ? (
+                        <Link href={`/client/${encodeURIComponent(c.customer_id)}`}
+                              className="hover:text-accent hover:underline transition-colors">
+                          {c.customer_name}
+                        </Link>
+                      ) : c.customer_name}
+                    </td>
                     <td className="py-2 px-3 text-right font-semibold text-fg">{fmtEur(c.ca)}</td>
                     <td className="py-2 px-3 text-right text-fg-muted">{c.nb_orders}</td>
                     <td className="py-2 px-3 text-right text-fg-muted">{fmtEur(c.panier_moyen)}</td>

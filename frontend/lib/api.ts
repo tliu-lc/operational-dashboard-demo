@@ -436,7 +436,7 @@ export const fetchPaymentsOverdue = (boutique: string) =>
 export interface CaParJourPoint { date: string; ca: number; nb_orders: number }
 export interface CaParMoisPoint  { mois: string; ca: number; nb_orders: number; nb_clients: number }
 export interface VentesSemainePoint { dow: number; label: string; avg_ca: number; total_ca: number; nb_orders: number }
-export interface TopClient { customer_name: string; ca: number; nb_orders: number; panier_moyen: number }
+export interface TopClient { customer_name: string; customer_id?: string; ca: number; nb_orders: number; panier_moyen: number }
 
 export interface DaysRangeQuery { days?: number; from?: string; to?: string }
 
