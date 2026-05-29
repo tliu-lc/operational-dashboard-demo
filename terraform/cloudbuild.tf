@@ -1,17 +1,15 @@
 # ── Cloud Build Trigger — déploiement sur merge dans main ─────────────────
-# Prérequis : connecter le dépôt GitHub à Cloud Build via la Console GCP
-# (Cloud Build → Triggers → Connect Repository → GitHub)
+# Trigger 2nd gen : connexion GitHub App configurée manuellement dans la console
+# (Cloud Build → Triggers → Manage repositories → Connect)
 
 resource "google_cloudbuild_trigger" "deploy_main" {
-  name        = "demo-deploy-main"
-  description = "Déploie l'application à chaque merge dans main"
+  name        = "deploy-on-push-main"
+  description = "Déploie la démo sur push dans main"
   project     = var.project_id
   location    = var.region
 
-  github {
-    owner = var.github_owner
-    name  = var.github_repo
-
+  repository_event_config {
+    repository = "projects/${var.project_id}/locations/${var.region}/connections/${var.github_owner}/repositories/${var.github_owner}-${var.github_repo}"
     push {
       branch = "^main$"
     }

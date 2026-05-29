@@ -179,7 +179,7 @@ resource "google_cloud_run_v2_job" "ingestion" {
       service_account = google_service_account.ingestion.email
 
       containers {
-        image = "${local.registry}/ingestion:latest"
+        image = local.placeholder_image
 
         env {
           name  = "GCP_PROJECT_ID"
@@ -225,7 +225,7 @@ resource "google_cloud_run_v2_job" "dbt" {
       service_account = google_service_account.dbt.email
 
       containers {
-        image = "${local.registry}/dbt:latest"
+        image = local.placeholder_image
 
         env {
           name  = "GCP_PROJECT_ID"
