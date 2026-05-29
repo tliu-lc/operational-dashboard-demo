@@ -4,7 +4,7 @@
 
 substitutions:
   _REGION: europe-west1
-  _REGISTRY: europe-west1-docker.pkg.dev/$PROJECT_ID/hippocampe
+  _REGISTRY: europe-west1-docker.pkg.dev/delor-demo/hippocampe
   _API_SERVICE: hippocampe-api
   _FRONTEND_SERVICE: hippocampe-frontend
   _SA: hippocampe-sa
