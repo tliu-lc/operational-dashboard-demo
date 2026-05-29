@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>LIU CONSULTING — Tableau de bord opérationnel</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', Arial, sans-serif;
+    font-size: 10pt;
+    color: #1a1a2e;
+    background: #fff;
+  }
+
+  /* ── Page A4 ── */
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+    padding: 14mm 16mm 12mm;
+    background: #fff;
+  }
+
+  @media print {
+    body { background: #fff; }
+    .page { margin: 0; padding: 14mm 16mm 12mm; box-shadow: none; }
+    @page { size: A4; margin: 0; }
+  }
+
+  /* ── Header ── */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 3px solid #1a1a2e;
+    padding-bottom: 8px;
+    margin-bottom: 14px;
+  }
+  .header-left h1 {
+    font-size: 17pt;
+    font-weight: 900;
+    color: #1a1a2e;
+    line-height: 1.1;
+  }
+  .header-left h1 span { color: #e63946; }
+  .header-left p {
+    font-size: 9pt;
+    color: #555;
+    margin-top: 3px;
+  }
+  .header-right {
+    text-align: right;
+    font-size: 8.5pt;
+    color: #555;
+    line-height: 1.7;
+  }
+  .header-right strong { color: #1a1a2e; font-size: 9.5pt; }
+
+  /* ── Section titles ── */
+  .section-title {
+    font-size: 8pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: #e63946;
+    margin-bottom: 6px;
+    margin-top: 14px;
+  }
+
+  /* ── Hero tagline ── */
+  .tagline {
+    font-size: 13pt;
+    font-weight: 700;
+    line-height: 1.35;
+    color: #1a1a2e;
+    margin-bottom: 10px;
+  }
+
+  /* ── Two-column layout ── */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  /* ── Pain points ── */
+  .pain-list { list-style: none; }
+  .pain-list li {
+    padding: 5px 0 5px 18px;
+    position: relative;
+    font-size: 9.5pt;
+    border-bottom: 1px solid #f0f0f0;
+    line-height: 1.4;
+  }
+  .pain-list li::before {
+    content: '✗';
+    position: absolute;
+    left: 0;
+    color: #e63946;
+    font-weight: 700;
+  }
+
+  /* ── Features ── */
+  .feature-list { list-style: none; }
+  .feature-list li {
+    padding: 5px 0 5px 18px;
+    position: relative;
+    font-size: 9.5pt;
+    border-bottom: 1px solid #f0f0f0;
+    line-height: 1.4;
+  }
+  .feature-list li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: #2d9e5b;
+    font-weight: 700;
+  }
+
+  /* ── Screenshot placeholder ── */
+  .screenshots {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .screenshot-box {
+    background: #f5f5f7;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    height: 52mm;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 8pt;
+    color: #999;
+    font-style: italic;
+  }
+
+  /* ── Timeline ── */
+  .timeline {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+    margin-top: 10px;
+  }
+  .timeline-step {
+    flex: 1;
+    text-align: center;
+    position: relative;
+  }
+  .timeline-step::after {
+    content: '→';
+    position: absolute;
+    right: -8px;
+    top: 12px;
+    color: #ccc;
+    font-size: 12pt;
+  }
+  .timeline-step:last-child::after { display: none; }
+  .tl-week {
+    background: #1a1a2e;
+    color: #fff;
+    border-radius: 3px;
+    padding: 3px 6px;
+    font-size: 7.5pt;
+    font-weight: 600;
+    display: inline-block;
+    margin-bottom: 4px;
+  }
+  .tl-label {
+    font-size: 8pt;
+    color: #555;
+    line-height: 1.3;
+  }
+
+  /* ── Prix ── */
+  .pricing-box {
+    border: 2px solid #1a1a2e;
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin-top: 10px;
+  }
+  .price-main {
+    font-size: 16pt;
+    font-weight: 900;
+    color: #1a1a2e;
+  }
+  .price-sub {
+    font-size: 9pt;
+    color: #555;
+    margin-top: 2px;
+  }
+  .price-maintenance {
+    margin-top: 8px;
+    font-size: 9pt;
+    color: #444;
+    border-top: 1px solid #eee;
+    padding-top: 6px;
+  }
+
+  /* ── Stack logos ── */
+  .stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .stack-tag {
+    background: #f5f5f7;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    padding: 2px 7px;
+    font-size: 8pt;
+    font-weight: 600;
+    color: #333;
+  }
+
+  /* ── CTA footer ── */
+  .cta-footer {
+    background: #1a1a2e;
+    color: #fff;
+    border-radius: 6px;
+    padding: 10px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 14px;
+  }
+  .cta-footer p { font-size: 9.5pt; line-height: 1.5; }
+  .cta-footer strong { font-size: 10.5pt; }
+  .cta-contact {
+    text-align: right;
+    font-size: 8.5pt;
+    color: #ccc;
+    line-height: 1.7;
+    white-space: nowrap;
+    margin-left: 20px;
+  }
+  .cta-contact strong { color: #fff; font-size: 9.5pt; }
+
+  /* ── Divider ── */
+  hr { border: none; border-top: 1px solid #eee; margin: 12px 0; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-left">
+      <h1>LIU <span>CONSULTING</span></h1>
+      <p>Tableaux de bord opérationnels sur mesure · GCP · BigQuery · Next.js</p>
+    </div>
+    <div class="header-right">
+      <strong>Tim LIU</strong><br>
+      tim.liu.liuconsulting@gmail.com<br>
+      linkedin.com/in/tim-liu-liuconsulting
+    </div>
+  </div>
+
+  <!-- TAGLINE -->
+  <p class="tagline">
+    Pilotez vos boutiques en temps réel —<br>
+    tableau de bord opérationnel sur mesure, livré en 8 semaines.
+  </p>
+
+  <div class="two-col">
+
+    <!-- COLONNE GAUCHE : Problème + Solution -->
+    <div>
+      <div class="section-title">Le problème</div>
+      <ul class="pain-list">
+        <li>Reporting manuel dans Excel — disponible en fin de mois seulement</li>
+        <li>Données fragmentées : chaque boutique a ses propres chiffres</li>
+        <li>Aucune alerte — vous découvrez le problème après qu'il a coûté de l'argent</li>
+      </ul>
+
+      <div class="section-title">Ce que vous obtenez</div>
+      <ul class="feature-list">
+        <li>Chiffres consolidés de toutes vos boutiques — chaque matin</li>
+        <li>Alertes churn : les clients qui décrochent, avant qu'ils partent</li>
+        <li>Stocks par dépôt avec alertes rupture urgente</li>
+        <li>Segmentation clients RFM (Champions, À Risque, Perdus)</li>
+        <li>Carte France / international — CA par département</li>
+        <li>Prospection SIRENE — prospects qualifiés par NAF et géographie</li>
+        <li>Pipeline de données automatique — rafraîchissement quotidien</li>
+      </ul>
+
+      <div class="section-title">La stack technique</div>
+      <div class="stack">
+        <span class="stack-tag">Next.js 15</span>
+        <span class="stack-tag">FastAPI</span>
+        <span class="stack-tag">BigQuery</span>
+        <span class="stack-tag">dbt</span>
+        <span class="stack-tag">Terraform</span>
+        <span class="stack-tag">Cloud Run</span>
+        <span class="stack-tag">GCP</span>
+      </div>
+    </div>
+
+    <!-- COLONNE DROITE : Screenshots + Prix -->
+    <div>
+      <div class="section-title">Le dashboard</div>
+      <div class="screenshots">
+        <div class="screenshot-box">
+          Capture dashboard<br>opérationnel
+        </div>
+        <div class="screenshot-box">
+          Capture carte<br>géographique
+        </div>
+      </div>
+
+      <div class="section-title" style="margin-top:12px;">Le prix</div>
+      <div class="pricing-box">
+        <div class="price-main">À partir de 45 000 € HT</div>
+        <div class="price-sub">Mission forfaitaire — développement complet + livraison</div>
+        <div class="price-maintenance">
+          + Maintenance annuelle : <strong>8 000 – 12 000 € HT/an</strong><br>
+          <span style="font-size:8.5pt;color:#777">(support, hébergement GCP, évolutions mineures)</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <hr>
+
+  <!-- TIMELINE -->
+  <div class="section-title">Comment ça se passe — 8 semaines</div>
+  <div class="timeline">
+    <div class="timeline-step">
+      <div class="tl-week">S1–S2</div>
+      <div class="tl-label">Cadrage &amp;<br>connexion données</div>
+    </div>
+    <div class="timeline-step">
+      <div class="tl-week">S3–S4</div>
+      <div class="tl-label">Pipeline BQ<br>+ API backend</div>
+    </div>
+    <div class="timeline-step">
+      <div class="tl-week">S5–S6</div>
+      <div class="tl-label">Frontend<br>beta client</div>
+    </div>
+    <div class="timeline-step">
+      <div class="tl-week">S7</div>
+      <div class="tl-label">Recette<br>corrections</div>
+    </div>
+    <div class="timeline-step">
+      <div class="tl-week">S8</div>
+      <div class="tl-label">Livraison<br>formation</div>
+    </div>
+  </div>
+
+  <!-- CTA FOOTER -->
+  <div class="cta-footer">
+    <p>
+      <strong>Un appel de 30 minutes pour voir si votre situation correspond.</strong><br>
+      Je vous montre une démo live avec des données qui ressemblent aux vôtres.
+    </p>
+    <div class="cta-contact">
+      <strong>Tim LIU — LIU CONSULTING</strong><br>
+      tim.liu.liuconsulting@gmail.com<br>
+      linkedin.com/in/tim-liu-liuconsulting
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

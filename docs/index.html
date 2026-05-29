@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LIU CONSULTING — Tableau de bord opérationnel pour PME</title>
+<meta name="description" content="Pilotez vos boutiques en temps réel. Tableau de bord opérationnel sur mesure livré en 8 semaines — BigQuery, Next.js, GCP.">
+<style>
+  :root {
+    --dark: #1a1a2e;
+    --red: #e63946;
+    --green: #2d9e5b;
+    --grey: #f5f5f7;
+    --text: #333;
+    --muted: #666;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: -apple-system, 'Inter', Arial, sans-serif; color: var(--text); background: #fff; }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; width: 100%; background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(10px); border-bottom: 1px solid #eee;
+    padding: 14px 6%; display: flex; justify-content: space-between; align-items: center;
+    z-index: 100;
+  }
+  .nav-logo { font-weight: 900; font-size: 1.1rem; color: var(--dark); }
+  .nav-logo span { color: var(--red); }
+  .nav-cta {
+    background: var(--dark); color: #fff; padding: 8px 18px; border-radius: 6px;
+    text-decoration: none; font-size: 0.85rem; font-weight: 600;
+    transition: background 0.2s;
+  }
+  .nav-cta:hover { background: #2d2d4e; }
+
+  /* ── SECTIONS ── */
+  section { padding: 80px 6%; }
+  .container { max-width: 960px; margin: 0 auto; }
+
+  /* ── HERO ── */
+  #hero {
+    padding-top: 130px; padding-bottom: 80px;
+    background: linear-gradient(135deg, var(--dark) 0%, #2d2d4e 100%);
+    color: #fff; text-align: center;
+  }
+  #hero h1 { font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 900; line-height: 1.2; margin-bottom: 16px; }
+  #hero h1 em { color: #f4c430; font-style: normal; }
+  #hero p { font-size: 1.1rem; color: rgba(255,255,255,0.75); max-width: 580px; margin: 0 auto 32px; line-height: 1.6; }
+  .hero-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--red); color: #fff; padding: 14px 28px; border-radius: 8px;
+    font-weight: 700; font-size: 1rem; text-decoration: none; transition: transform 0.2s;
+  }
+  .btn-primary:hover { transform: translateY(-2px); }
+  .btn-secondary {
+    background: rgba(255,255,255,0.12); color: #fff; padding: 14px 28px; border-radius: 8px;
+    font-weight: 600; font-size: 1rem; text-decoration: none; border: 1px solid rgba(255,255,255,0.3);
+  }
+
+  /* ── PROBLEM ── */
+  #problem { background: var(--grey); }
+  .section-label {
+    font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px;
+    color: var(--red); margin-bottom: 12px;
+  }
+  h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); font-weight: 800; color: var(--dark); margin-bottom: 32px; line-height: 1.3; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+  .card {
+    background: #fff; border-radius: 10px; padding: 24px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  .card-icon { font-size: 1.6rem; margin-bottom: 10px; }
+  .card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 6px; color: var(--dark); }
+  .card p { font-size: 0.9rem; color: var(--muted); line-height: 1.5; }
+
+  /* ── SOLUTION ── */
+  .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+  .feature {
+    padding: 16px; border-left: 3px solid var(--green); background: var(--grey); border-radius: 0 8px 8px 0;
+  }
+  .feature h3 { font-size: 0.9rem; font-weight: 700; margin-bottom: 4px; color: var(--dark); }
+  .feature p { font-size: 0.83rem; color: var(--muted); line-height: 1.4; }
+
+  /* ── HOW ── */
+  #how { background: var(--grey); }
+  .steps { display: flex; gap: 0; align-items: flex-start; flex-wrap: wrap; }
+  .step { flex: 1; min-width: 150px; text-align: center; padding: 16px; position: relative; }
+  .step-num {
+    width: 40px; height: 40px; background: var(--dark); color: #fff;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-weight: 800; margin: 0 auto 10px; font-size: 1rem;
+  }
+  .step h3 { font-size: 0.9rem; font-weight: 700; margin-bottom: 4px; }
+  .step p { font-size: 0.8rem; color: var(--muted); }
+  .step-arrow { font-size: 1.4rem; color: #ccc; align-self: center; padding: 0 4px; margin-top: -20px; }
+
+  /* ── CASE STUDY ── */
+  #reference {
+    background: var(--dark); color: #fff;
+  }
+  #reference .section-label { color: #f4c430; }
+  #reference h2 { color: #fff; }
+  .ref-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+  @media (max-width: 640px) { .ref-grid { grid-template-columns: 1fr; } }
+  .ref-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .stat { text-align: center; padding: 16px; background: rgba(255,255,255,0.07); border-radius: 8px; }
+  .stat-num { font-size: 1.8rem; font-weight: 900; color: #f4c430; }
+  .stat-label { font-size: 0.8rem; color: rgba(255,255,255,0.65); margin-top: 4px; }
+  .quote {
+    border-left: 4px solid #f4c430; padding-left: 20px;
+    font-style: italic; color: rgba(255,255,255,0.85); line-height: 1.7; font-size: 1rem;
+    margin-top: 24px;
+  }
+  .quote cite { display: block; margin-top: 8px; font-style: normal; font-size: 0.85rem; color: rgba(255,255,255,0.5); }
+
+  /* ── PRICING ── */
+  .pricing-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+  .price-card {
+    border: 2px solid #eee; border-radius: 12px; padding: 28px 24px;
+  }
+  .price-card.featured { border-color: var(--dark); position: relative; }
+  .price-card.featured::before {
+    content: 'Recommandé';
+    position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+    background: var(--dark); color: #fff; font-size: 0.75rem; font-weight: 700;
+    padding: 3px 12px; border-radius: 20px;
+  }
+  .price-name { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+  .price-amount { font-size: 2rem; font-weight: 900; color: var(--dark); }
+  .price-amount sup { font-size: 1rem; }
+  .price-desc { font-size: 0.85rem; color: var(--muted); margin-top: 4px; margin-bottom: 20px; line-height: 1.4; }
+  .price-features { list-style: none; }
+  .price-features li { font-size: 0.88rem; padding: 5px 0; border-bottom: 1px solid #f5f5f5; }
+  .price-features li::before { content: '✓  '; color: var(--green); font-weight: 700; }
+
+  /* ── STACK ── */
+  #stack { background: var(--grey); }
+  .stack-tags { display: flex; flex-wrap: wrap; gap: 10px; }
+  .stack-tag {
+    background: #fff; border: 1px solid #ddd; border-radius: 6px;
+    padding: 6px 14px; font-size: 0.9rem; font-weight: 600; color: var(--dark);
+  }
+
+  /* ── CONTACT ── */
+  #contact { text-align: center; }
+  .contact-box {
+    background: var(--dark); color: #fff; border-radius: 16px; padding: 48px 40px;
+    max-width: 600px; margin: 0 auto;
+  }
+  .contact-box h2 { color: #fff; margin-bottom: 12px; }
+  .contact-box p { color: rgba(255,255,255,0.7); margin-bottom: 28px; line-height: 1.6; }
+  .contact-info { display: flex; flex-direction: column; gap: 8px; align-items: center; }
+  .contact-info a {
+    color: #f4c430; text-decoration: none; font-weight: 600; font-size: 1rem;
+  }
+  .contact-info a:hover { text-decoration: underline; }
+  .contact-name { font-weight: 700; font-size: 1.05rem; color: #fff; margin-bottom: 4px; }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center; padding: 24px; font-size: 0.8rem; color: #aaa;
+    border-top: 1px solid #eee;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 640px) {
+    section { padding: 60px 5%; }
+    .step-arrow { display: none; }
+    .steps { justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">LIU <span>CONSULTING</span></div>
+  <a href="#contact" class="nav-cta">Prendre contact</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="container">
+    <h1>Pilotez vos boutiques<br><em>en temps réel</em></h1>
+    <p>Tableau de bord opérationnel sur mesure pour grossistes et distributeurs multi-sites — livré en 8 semaines, hébergé sur le cloud, zéro maintenance de votre côté.</p>
+    <div class="hero-btns">
+      <a href="https://demo-frontend-bl6u7ximoa-ew.a.run.app" class="btn-primary" target="_blank">Voir la démo live →</a>
+      <a href="#contact" class="btn-secondary">Parlons de votre projet</a>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section id="problem">
+  <div class="container">
+    <div class="section-label">Le problème</div>
+    <h2>Vous pilotez votre activité à l'aveugle</h2>
+    <div class="cards">
+      <div class="card">
+        <div class="card-icon">📊</div>
+        <h3>Reporting manuel</h3>
+        <p>Exports CSV + Excel consolidé à la main — les chiffres arrivent en fin de mois, quand il est trop tard pour réagir.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🏪</div>
+        <h3>Données fragmentées</h3>
+        <p>Chaque boutique a sa propre version. Impossible d'avoir un CA global fiable sans passer des heures à tout consolider.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🚨</div>
+        <h3>Alertes trop tardives</h3>
+        <p>Rupture de stock, client qui décroche, article qui ne se vend plus — vous le découvrez après que ça a coûté de l'argent.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUTION -->
+<section id="solution">
+  <div class="container">
+    <div class="section-label">La solution</div>
+    <h2>Un dashboard qui pense à votre place</h2>
+    <div class="features-grid">
+      <div class="feature">
+        <h3>Dashboard du jour</h3>
+        <p>KPIs temps réel, alertes critiques, résumé en un coup d'œil — chaque matin</p>
+      </div>
+      <div class="feature">
+        <h3>Alertes churn</h3>
+        <p>Clients qui décrochent détectés avant qu'ils partent — score de risque par client</p>
+      </div>
+      <div class="feature">
+        <h3>Segmentation RFM</h3>
+        <p>Champions, À Risque, Perdus — chaque client dans la bonne case</p>
+      </div>
+      <div class="feature">
+        <h3>Carte géographique</h3>
+        <p>CA par département et par pays — choroplèthe interactif France + international</p>
+      </div>
+      <div class="feature">
+        <h3>Stocks & alertes</h3>
+        <p>Niveaux par dépôt, alertes rupture urgente, mouvements de stock</p>
+      </div>
+      <div class="feature">
+        <h3>Performance saisonnière</h3>
+        <p>Best-sellers et flops par saison — pour anticiper les commandes</p>
+      </div>
+      <div class="feature">
+        <h3>Fiche client</h3>
+        <p>Historique complet, CA mensuel, top articles — en 1 clic depuis n'importe où</p>
+      </div>
+      <div class="feature">
+        <h3>Prospection SIRENE</h3>
+        <p>2,6 Go de données INSEE — prospects qualifiés par NAF et distance géographique</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW -->
+<section id="how">
+  <div class="container">
+    <div class="section-label">Comment ça marche</div>
+    <h2>De vos données à votre dashboard — en 3 étapes</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>Vos données</h3>
+        <p>Vous exportez vos fichiers EBP comme d'habitude. Un script simple les dépose sur le cloud.</p>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>Pipeline automatique</h3>
+        <p>Chaque nuit, les données sont chargées, transformées et enrichies — sans intervention humaine.</p>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>Votre dashboard</h3>
+        <p>Le matin, vous ouvrez votre navigateur et vous lisez. Toutes les boutiques, en une vue.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REFERENCE -->
+<section id="reference">
+  <div class="container">
+    <div class="section-label">Projet de référence</div>
+    <h2>Livré pour un grossiste textile, 4 boutiques</h2>
+    <div class="ref-grid">
+      <div>
+        <p style="color:rgba(255,255,255,0.75);line-height:1.7;margin-bottom:24px;">
+          Un grossiste vêtements avec 4 boutiques géraient son reporting entièrement dans Excel. Nous avons livré un tableau de bord complet en 19 sprints — pipeline de données automatisé, 14 vues métier, infrastructure cloud entièrement gérée.
+        </p>
+        <div class="quote">
+          "Pour la première fois, on peut comparer nos 4 boutiques sur un seul écran et réagir le jour même."
+          <cite>— Direction commerciale, client de référence</cite>
+        </div>
+      </div>
+      <div class="ref-stats">
+        <div class="stat"><div class="stat-num">14</div><div class="stat-label">Vues métier</div></div>
+        <div class="stat"><div class="stat-num">19</div><div class="stat-label">Sprints livrés</div></div>
+        <div class="stat"><div class="stat-num">23</div><div class="stat-label">Modèles dbt</div></div>
+        <div class="stat"><div class="stat-num">8 sem.</div><div class="stat-label">Délai livraison</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="container">
+    <div class="section-label">Tarifs</div>
+    <h2>Transparent, sans surprise</h2>
+    <div class="pricing-cards">
+      <div class="price-card">
+        <div class="price-name">Starter</div>
+        <div class="price-amount">1 200 €<span style="font-size:1rem;font-weight:400;color:#666">/mois</span></div>
+        <div class="price-desc">Dashboard essentiel — jusqu'à 2 boutiques</div>
+        <ul class="price-features">
+          <li>5 vues métier (dashboard, clients, stock, ventes, géo)</li>
+          <li>Pipeline automatisé quotidien</li>
+          <li>Hébergement GCP inclus</li>
+          <li>Support email</li>
+        </ul>
+      </div>
+      <div class="price-card featured">
+        <div class="price-name">Business</div>
+        <div class="price-amount">2 500 €<span style="font-size:1rem;font-weight:400;color:#666">/mois</span></div>
+        <div class="price-desc">Dashboard complet — jusqu'à 6 boutiques</div>
+        <ul class="price-features">
+          <li>14 vues métier — tout inclus</li>
+          <li>Alertes churn + RFM + prospection SIRENE</li>
+          <li>Pipeline + infra + CI/CD gérés</li>
+          <li>Support prioritaire + évolutions mineures</li>
+        </ul>
+      </div>
+      <div class="price-card">
+        <div class="price-name">Forfait mission</div>
+        <div class="price-amount">45 000 €<span style="font-size:0.85rem;font-weight:400;color:#666"> HT</span></div>
+        <div class="price-desc">Développement sur mesure, livré en 8 semaines</div>
+        <ul class="price-features">
+          <li>Tout le code source — vous êtes propriétaire</li>
+          <li>Formation 2 jours incluse</li>
+          <li>3 mois de support post-livraison</li>
+          <li>Maintenance annuelle : 10 000 € HT/an</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STACK -->
+<section id="stack">
+  <div class="container">
+    <div class="section-label">Stack technique</div>
+    <h2>Des technologies solides et éprouvées</h2>
+    <div class="stack-tags">
+      <span class="stack-tag">Next.js 15</span>
+      <span class="stack-tag">React / TypeScript</span>
+      <span class="stack-tag">Tailwind CSS</span>
+      <span class="stack-tag">FastAPI (Python)</span>
+      <span class="stack-tag">BigQuery</span>
+      <span class="stack-tag">dbt Core</span>
+      <span class="stack-tag">Google Cloud Run</span>
+      <span class="stack-tag">Cloud Scheduler</span>
+      <span class="stack-tag">Terraform</span>
+      <span class="stack-tag">Cloud Build CI/CD</span>
+      <span class="stack-tag">Secret Manager</span>
+      <span class="stack-tag">Artifact Registry</span>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="container">
+    <div class="contact-box">
+      <h2>Un appel de 30 minutes</h2>
+      <p>Pour voir si votre situation correspond. Je vous montre une démo live avec des données qui ressemblent aux vôtres — puis on parle de votre projet.</p>
+      <div class="contact-info">
+        <span class="contact-name">Tim LIU — LIU CONSULTING</span>
+        <a href="mailto:tim.liu.liuconsulting@gmail.com">tim.liu.liuconsulting@gmail.com</a>
+        <a href="https://linkedin.com/in/tim-liu-liuconsulting" target="_blank">linkedin.com/in/tim-liu-liuconsulting</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  © 2026 LIU CONSULTING — Tim LIU · SIRET à compléter · Mentions légales
+</footer>
+
+</body>
+</html>
