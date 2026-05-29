@@ -83,7 +83,7 @@ steps:
       - --port=8000
       - --min-instances=0
       - --max-instances=3
-      - --set-env-vars=GCP_PROJECT_ID=$PROJECT_ID,BQ_RAW_DATASET=hippocampe_raw,BQ_DWH_DATASET=hippocampe_dwh,BQ_DTM_DATASET=hippocampe_dtm,SKIP_AUTH_MIDDLEWARE=true,BOUTIQUES_CONFIG=$_BOUTIQUES_CONFIG
+      - --set-env-vars=GCP_PROJECT_ID=$PROJECT_ID,BQ_RAW_DATASET=hippocampe_raw,BQ_DWH_DATASET=hippocampe_dwh,BQ_DTM_DATASET=hippocampe_dtm,SKIP_AUTH_MIDDLEWARE=true
     waitFor: [push-api]
 
   # ── 6. Récupérer l'URL API ───────────────────────────────────────────────
