@@ -14,10 +14,10 @@ DB_DIR = Path(__file__).parent.parent.parent / "data" / "db"
 DB_PATH = DB_DIR / "demo.duckdb"
 
 BOUTIQUES = [
-    {"id": "SED", "label": "SEDAINE"},
-    {"id": "HIP", "label": "FASHION_CENTER"},
-    {"id": "HPC", "label": "DEMO"},
-    {"id": "ACC", "label": "DEMO ACCESSOIRES"},
+    {"id": "SED", "label": "LYON PRESQUILE"},
+    {"id": "HIP", "label": "PARIS MARAIS"},
+    {"id": "HPC", "label": "MARSEILLE PRADO"},
+    {"id": "ACC", "label": "NANTES COMMERCE"},
 ]
 
 BOUTIQUE_IDS = [b["id"] for b in BOUTIQUES]

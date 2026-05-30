@@ -11,10 +11,10 @@ ROOT = Path(__file__).parent.parent
 DB_PATH = ROOT / "data" / "db" / "demo.duckdb"
 
 BOUTIQUE_NAMES = {
-    "ACC": "DEMO ACCESSOIRES",
-    "HIP": "FASHION_CENTER",
-    "SED": "SEDAINE",
-    "HPC": "DEMO",
+    "ACC": "NANTES COMMERCE",
+    "HIP": "PARIS MARAIS",
+    "SED": "LYON PRESQUILE",
+    "HPC": "MARSEILLE PRADO",
 }
 
 
