@@ -60,9 +60,7 @@ export default function ProspectionPage() {
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo,   setDateTo]   = useState("");
   const [selectedRegions, setSelectedRegions] = useState<string[]>([]);
-  // Défaut "femme" — la majorité des boutiques 47.71Z ciblées par le grossiste
-  // (le commercial peut décocher s'il veut voir tous les types)
-  const [selectedShopTypes, setSelectedShopTypes] = useState<string[]>(["femme"]);
+  const [selectedShopTypes, setSelectedShopTypes] = useState<string[]>([]);
   const [includeChains, setIncludeChains] = useState(false); // défaut : chaînes EXCLUES (grossiste B2B)
   const [scoreMin, setScoreMin] = useState(0);
   const [hasDenomination, setHasDenomination] = useState(true); // défaut : exclure les [ND]/NULL
