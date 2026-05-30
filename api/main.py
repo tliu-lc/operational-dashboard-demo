@@ -13,9 +13,10 @@ from google.auth.transport import requests as grequests
 
 from api.routers import rfm, churn, client, geo, stock, perf_season, monitoring, articles, payments, analyse, prospects
 
+_project = os.environ.get("GCP_PROJECT_ID", "")
 TRUSTED_SA_EMAILS = {
-    "demo-frontend-sa@demo-monitor-prod.iam.gserviceaccount.com",
-    "demo-sa@demo-monitor-prod.iam.gserviceaccount.com",  # backward compat
+    f"demo-frontend-sa@{_project}.iam.gserviceaccount.com",
+    f"demo-sa@{_project}.iam.gserviceaccount.com",
 }
 
 app = FastAPI(title="DEMO-MONITOR API")
