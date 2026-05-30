@@ -114,17 +114,17 @@ export default function ClientDetailPage() {
             <h1 className="text-2xl font-bold text-fg">{detail.customer_name}</h1>
             {detail.presence === "both" && (
               <span className="inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded bg-emerald-100 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300">
-                🔗 Sédaine + Fashion Center
+                🔗 Multi-boutiques
               </span>
             )}
             {detail.presence === "sed_only" && (
               <span className="inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded bg-violet-100 dark:bg-violet-950/40 text-violet-800 dark:text-violet-300">
-                <span className="w-1.5 h-1.5 rounded-full bg-violet-500" /> Sédaine uniquement
+                <span className="w-1.5 h-1.5 rounded-full bg-violet-500" /> Lyon Presqu'île uniquement
               </span>
             )}
             {detail.presence === "hip_only" && (
               <span className="inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded bg-cyan-100 dark:bg-cyan-950/40 text-cyan-800 dark:text-cyan-300">
-                <span className="w-1.5 h-1.5 rounded-full bg-cyan-500" /> Fashion Center uniquement
+                <span className="w-1.5 h-1.5 rounded-full bg-cyan-500" /> Paris Marais uniquement
               </span>
             )}
           </div>
@@ -201,7 +201,7 @@ export default function ClientDetailPage() {
           </div>
         </div>
 
-        {/* Adresses par boutique source (uniquement pour les clients fusionnés Sédaine+Fashion Center) */}
+        {/* Adresses par boutique source (uniquement pour les clients présents dans plusieurs boutiques) */}
         {detail.boutique_sources && detail.boutique_sources.length > 1 && (
           <div className="mt-5 pt-5 border-t border-border">
             <p className="text-xs font-semibold uppercase tracking-wider text-fg-subtle mb-3">
@@ -209,7 +209,7 @@ export default function ClientDetailPage() {
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
               {detail.boutique_sources.map(src => {
-                const bLabel = src.boutique_id === "SED" ? "Sédaine" : src.boutique_id === "HIP" ? "Fashion Center" : src.boutique_id;
+                const bLabel = src.boutique_id === "SED" ? "Lyon Presqu'île" : src.boutique_id === "HIP" ? "Paris Marais" : src.boutique_id === "HPC" ? "Marseille Prado" : src.boutique_id === "ACC" ? "Nantes Commerce" : src.boutique_id;
                 const bColor = src.boutique_id === "SED"
                   ? "bg-violet-100 dark:bg-violet-950/40 text-violet-800 dark:text-violet-300"
                   : "bg-cyan-100 dark:bg-cyan-950/40 text-cyan-800 dark:text-cyan-300";

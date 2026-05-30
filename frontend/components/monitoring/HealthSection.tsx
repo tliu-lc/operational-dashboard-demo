@@ -41,7 +41,7 @@ function MartCard({ name, info }: { name: string; info: MonitoringMartInfo }) {
       <div className="bg-surface-2 rounded-xl shadow-sm ring-1 ring-red-200 p-3">
         <p className="text-xs text-fg-muted truncate">{label}</p>
         <p className="text-xs text-red-600 dark:text-red-400 mt-1 font-medium">Table absente</p>
-        <p className="text-xs text-red-400">Pipeline non exécuté</p>
+        <p className="text-xs text-red-400">Données pas encore disponibles</p>
       </div>
     );
   }
@@ -94,8 +94,8 @@ export default function HealthSection({ data, loading, error, onRetry }: Props) 
 
       {!error && data?.bq_status === "error" && (
         <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900 rounded-xl p-4">
-          <p className="text-sm font-semibold text-red-700 dark:text-red-300">BigQuery inaccessible</p>
-          {data.bq_error && <p className="text-xs text-red-500 mt-1 font-mono">{data.bq_error}</p>}
+          <p className="text-sm font-semibold text-red-700 dark:text-red-300">⚠ Les données ne sont pas disponibles pour le moment</p>
+          <p className="text-xs text-red-500 mt-1">Veuillez réessayer dans quelques instants ou contacter le support.</p>
         </div>
       )}
 
@@ -107,7 +107,7 @@ export default function HealthSection({ data, loading, error, onRetry }: Props) 
               <div className="h-5 bg-surface-3 animate-pulse rounded w-40" />
             ) : (
               <div className="flex items-center gap-2">
-                <span className="text-emerald-600 dark:text-emerald-400 text-sm font-medium">● BigQuery accessible</span>
+                <span className="text-emerald-600 dark:text-emerald-400 text-sm font-medium">● Données opérationnelles</span>
               </div>
             )}
 
