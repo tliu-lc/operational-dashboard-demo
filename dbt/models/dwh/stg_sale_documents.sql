@@ -1,4 +1,4 @@
-{% set boutiques = [('hip', 'HIP', 'PARIS 11E'), ('sed', 'SED', 'LYON PRESQUILE'), ('hpc', 'HPC', 'BORDEAUX CHARTRONS'), ('acc', 'ACC', 'NANTES COMMERCE')] %}
+{% set boutiques = [('sed', 'SED', 'LYON PRESQUILE'), ('acc', 'ACC', 'NANTES COMMERCE')] %}
 
 WITH unioned AS (
 {% for code_lower, code_upper, bname in boutiques %}
